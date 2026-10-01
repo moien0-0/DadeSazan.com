@@ -546,6 +546,74 @@ b, strong{ font-weight: 700; }
 .terminal .t-prompt{ color: var(--green-dim); }
 .terminal .caret{ display: inline-block; width: 8px; height: 15px; background: var(--green); vertical-align: -2px; animation: pulse 1s steps(1) infinite; }
 
+/* ================= ترمینال اختصاصی هر عضو (شبیه‌ساز Windows Terminal) ================= */
+.wt{
+  --wt-accent: #16c60c;
+  direction: ltr; text-align: left;
+  max-width: 860px; margin: 0 auto 8px;
+  background: #0c0c0c; border-radius: 10px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,.09);
+  box-shadow: 0 18px 44px rgba(0,0,0,.5), 0 0 0 1px rgba(0,255,65,.04);
+}
+.wt.wt-max{ max-width: 100%; }
+.wt-titlebar{
+  display: flex; align-items: stretch; justify-content: space-between;
+  background: #1b1b1b; height: 38px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+}
+.wt-tabs{ display: flex; align-items: flex-end; gap: 6px; padding: 5px 10px 0; flex: 1; min-width: 0; overflow: hidden; }
+.wt-tab{
+  display: flex; align-items: center; gap: 7px;
+  background: #0c0c0c; border: 1px solid rgba(255,255,255,.08); border-bottom: 0;
+  border-radius: 8px 8px 0 0; padding: 5px 12px 6px;
+  font-size: 12px; color: #d0d0d0; max-width: 250px;
+}
+.wt-tab .wt-ico{ display: inline-flex; color: var(--wt-accent); flex: none; }
+.wt-tab .wt-ico svg{ width: 13px; height: 13px; }
+.wt-tab b{ font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.wt-wctl{ display: flex; flex: none; }
+.wt-wctl button{
+  width: 44px; border: 0; background: transparent; color: #b8b8b8;
+  font-family: var(--mono); font-size: 14px; cursor: pointer; line-height: 1; padding: 0;
+}
+.wt-wctl button:hover{ background: #2e2e2e; color: #fff; }
+.wt-wctl .wt-wclose:hover{ background: #c42b1c; color: #fff; }
+.wt-body{
+  height: 460px; overflow-y: auto; padding: 12px 14px;
+  font-family: var(--mono); font-size: 13px; line-height: 1.62; color: #ccc;
+  cursor: text; overscroll-behavior: contain;
+}
+.wt-line{ white-space: pre-wrap; overflow-wrap: break-word; min-height: 1.35em; }
+.wt-line.err{ color: #e74856; }
+.wt-line.ok{ color: #16c60c; }
+.wt-line.gr{ color: #16c60c; }
+.wt-line.warn{ color: #f9f1a5; }
+.wt-line.ye{ color: #f9f1a5; }
+.wt-line.sys{ color: #8a8a8a; }
+.wt-line.dim{ color: #6a6a6a; }
+.wt-line.wh{ color: #f2f2f2; }
+.wt-line.cy{ color: #61d6d6; }
+.wt-prompt-seg{ white-space: pre; }
+.wt-prompt-seg .c-cy{ color: #61d6d6; }
+.wt-prompt-seg .c-path{ color: #3a96dd; }
+.wt-prompt-seg .c-wh{ color: #f2f2f2; }
+.wt-prompt-seg .c-py{ color: var(--wt-accent, #16c60c); font-weight: 700; }
+.wt-input-row{ display: flex; align-items: baseline; }
+.wt-input{
+  flex: 1; min-width: 40px; background: transparent; border: 0; outline: 0;
+  color: #f2f2f2; font: inherit; caret-color: var(--wt-accent);
+  direction: ltr; text-align: left; padding: 0; margin: 0;
+}
+.wt-body::-webkit-scrollbar{ width: 10px; }
+.wt-body::-webkit-scrollbar-thumb{ background: #333; border-radius: 6px; }
+.wt-body::-webkit-scrollbar-track{ background: transparent; }
+.wt.wt-min .wt-body{ display: none; }
+@media (max-width: 640px){
+  .wt-body{ height: 64vh; }
+  .wt-tab{ max-width: 180px; }
+}
+@media (pointer: coarse){ .wt-input{ font-size: 16px; } }
+
 .home-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr)); gap: 14px; margin-top: 16px; }
 .home-tile{ cursor: pointer; text-align: right; }
 .home-tile .ht-icon{
@@ -1563,6 +1631,7 @@ b, strong{ font-weight: 700; }
       <section id="view-home" class="view" hidden aria-label="خانه"></section>
       <section id="view-me" class="view" hidden aria-label="پروفایل من"></section>
       <section id="view-chat" class="view" hidden aria-label="چت تیم"></section>
+      <section id="view-term" class="view" hidden aria-label="ترمینال اختصاصی"></section>
       <section id="view-leader" class="view" hidden aria-label="لیدربورد"></section>
       <section id="view-membership" class="view" hidden aria-label="وضعیت عضویت"></section>
       <section id="view-settings" class="view" hidden aria-label="تنظیمات"></section>
@@ -1676,6 +1745,7 @@ const ICONS = {
   wand:    I('<path d="M15 4V2M15 10V8M11.5 6h-2M20.5 6h-2M17.8 3.2l-1.4 1.4M17.8 8.8l-1.4-1.4"/><path d="M13.5 7.5 3 18l3 3L16.5 10.5z"/>'),
   volume:  I('<path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>'),
   arrow:   I('<path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/><path d="M13 6l-6 6 6 6" opacity="0"/>'),
+  term:    I('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3"/><path d="M13 15h4"/>'),
 };
 const iconSvg = (name) => ICONS[name] || ICONS.shield;
 
@@ -2821,7 +2891,8 @@ const NAV = [
   { id: 'home',       label: 'خانه',           icon: 'home' },
   { id: 'me',         label: 'من',             icon: 'user',   auth: true },
   { id: 'chat',       label: 'چت',             icon: 'chat',   auth: true },
-  { id: 'leader',     label: 'لیدر',           icon: 'trophy', auth: true },
+  { id: 'term',       label: 'ترمینال',        icon: 'term',   auth: true },
+  { id: 'leader',     label: 'برترین‌ها',      icon: 'trophy', auth: true },
   { id: 'membership', label: 'وضعیت عضویت',    icon: 'shield', auth: true },
   { id: 'settings',   label: 'تنظیمات',        icon: 'gear',   auth: true },
   { id: 'admin',      label: 'مدیریت سایت',    icon: 'crown',  auth: true, admin: true },
@@ -2893,6 +2964,7 @@ function renderView(name){
     case 'home':       renderHome(); break;
     case 'me':         renderMe(); break;
     case 'chat':       renderChat(); break;
+    case 'term':       renderTerm(); break;
     case 'leader':     renderLeader(); break;
     case 'membership': renderMembership(); break;
     case 'settings':   renderSettings(); break;
@@ -3107,7 +3179,8 @@ function renderHome(){
   const tiles = [
     { id: 'me',         icon: 'user',   title: 'من',            desc: 'پروفایل، اطلاعات حساب و وضعیت شما در تیم' },
     { id: 'chat',       icon: 'chat',   title: 'چت تیم',        desc: 'گفت‌وگوی زنده اعضا با حضور آنلاین' },
-    { id: 'leader',     icon: 'trophy', title: 'لیدر',          desc: 'جدول امتیازات و رتبه‌بندی اعضای تیم' },
+    { id: 'term',       icon: 'term',   title: 'ترمینال من',     desc: 'ترمینال اختصاصی خودت با nmap، پایتون و ابزارهای بیشتر' },
+    { id: 'leader',     icon: 'trophy', title: 'برترین‌ها',      desc: 'جدول امتیازات و رتبه‌بندی اعضای تیم' },
     { id: 'membership', icon: 'shield', title: 'وضعیت عضویت',   desc: 'ارسال درخواست عضویت و پیگیری وضعیت آن' },
   ];
   if (isAdmin()) tiles.push({ id: 'admin', icon: 'crown', title: 'مدیریت سایت', desc: 'بررسی درخواست‌ها، اعضا و اقدامات مدیریتی', red: true });
@@ -3894,7 +3967,7 @@ async function renderLeader(){
   const sec = $('#view-leader');
   sec.replaceChildren(
     el('div', { class: 'view-head' },
-      el('h2', { class: 'view-title' }, el('span', { html: iconSvg('trophy') }), 'لیدربورد تیم', el('span', { class: 'en', text: 'LEADERBOARD' })),
+      el('h2', { class: 'view-title' }, el('span', { html: iconSvg('trophy') }), 'برترین‌های تیم', el('span', { class: 'en', text: 'LEADERBOARD' })),
       el('button', { class: 'icon-btn', type: 'button', 'aria-label': 'بارگذاری مجدد', html: iconSvg('refresh'), onclick: () => renderLeader() })
     ),
     el('div', { class: 'card' }, el('div', { class: 'skel-row' },
@@ -4570,12 +4643,13 @@ async function loadAdminRequests(){
   ]);
   if (reqRes.error){ adminBody.replaceChildren(el('p', { class: 'form-error', text: mapError(reqRes.error) })); return; }
   const pmap = new Map((profRes.data || []).map((x) => [x.id, x]));
-  const reqs = [...(reqRes.data || [])].sort((a, b) => (a.status === 'pending' ? 0 : 1) - (b.status === 'pending' ? 0 : 1));
-  const pendingCount = (reqRes.data || []).filter((r) => r.status === 'pending').length;
+  // فقط درخواست‌های در انتظار بررسی — درخواست‌های تأیید یا ردشده خودکار از لیست پاک می‌شوند
+  const reqs = (reqRes.data || []).filter((r) => r.status === 'pending');
+  const pendingCount = reqs.length;
 
   const list = el('div', { class: 'stack' });
   if (!reqs.length){
-    list.append(el('div', { class: 'card', style: 'text-align:center' }, el('p', { class: 'muted', text: 'هنوز درخواست عضویتی ثبت نشده است.' })));
+    list.append(el('div', { class: 'card', style: 'text-align:center' }, el('p', { class: 'muted', text: 'درخواستی برای بررسی نیست. درخواست‌های تأیید یا ردشده خودکار از این لیست پاک می‌شوند.' })));
   }
   for (const r of reqs){
     const u = pmap.get(r.user_id);
@@ -4631,7 +4705,7 @@ function requestDetailModal(r, u){
       { label: 'تأیید درخواست', class: 'btn-primary', onClick: async () => {
         const { error } = await state.client.rpc('review_membership_request', { p_request_id: r.id, p_action: 'approve' });
         if (error){ toast(mapError(error), 'error'); return false; }
-        toast('درخواست عضویت تأیید شد و کاربر به تیم پیوست.', 'info');
+        toast('درخواست تأیید شد، کاربر به تیم پیوست و درخواستش از لیست پاک شد.', 'info');
         loadAdminRequests();
       } },
       { label: 'رد درخواست', class: 'btn-ghost-danger', onClick: () => { rejectRequestModal(r); return false; } }
@@ -4904,6 +4978,1346 @@ async function loadAdminLog(){
   }
   adminBody.replaceChildren(el('h3', { class: 'section-label' }, 'گزارش فعالیت‌های مدیریتی'), list);
 }
+
+/* ============================================================================
+   ترمینال اختصاصی هر عضو — شبیه‌ساز Windows Terminal (پوسته dzsh)
+   همه‌چیز سمت مرورگر و شبیه‌سازی‌شده است: هیچ دستوری روی سرور اجرا نمی‌شود.
+   امنیت: تمام خروجی‌ها فقط با textContent رندر می‌شوند (بدون innerHTML داینامیک).
+   ذخیره‌سازی: تنظیمات و تاریخچه هر کاربر در localStorage مخصوص خودش (per-uid).
+   ============================================================================ */
+const TERM_KEY = 'dadesazan_term_v1_';
+const TERM_VERSION = '2.1.0';
+const TERM_UP0 = Date.now();
+const TERM_THEMES = {
+  green:  '#16c60c', amber: '#fca311', red:    '#e74856',
+  blue:   '#3a96dd', cyan:  '#61d6d6', purple: '#b4009e', white: '#f2f2f2',
+};
+const TERM_ALIAS = { cls: 'clear', dir: 'ls', python3: 'python', pip3: 'pip', quit: 'exit', logout: 'exit' };
+
+function termFS(host){
+  return { type: 'dir', children: {
+    Users: { type: 'dir', children: {
+      [host]: { type: 'dir', children: {
+        Documents: { type: 'dir', children: {
+          'readme.txt': { type: 'file', body: 'به ترمینال اختصاصی تیم داده‌سازان خوش آمدی!\nاینجا پوشه شخصی توست. با echo می‌توانی فایل بسازی:\n   echo متن دلخواه > note.txt' },
+          'goals.md': { type: 'file', body: '[ ] یادگیری پایتون\n[ ] اولین اسکریپت من\n[ ] رفتن به سقف لیدربورد' },
+        } },
+        Projects: { type: 'dir', children: {
+          'idea.txt': { type: 'file', body: 'ایده: رباتی که امتیازهای تیم را در چت اعلام کند.' },
+          'hello.py': { type: 'file', body: '# اولین برنامه پایتون\nprint("Hello, DADESAZAN!")\nname = "moein"\nprint("salam", name, "jan!")' },
+        } },
+        tools: { type: 'dir', children: {
+          'nmap.txt': { type: 'file', body: 'Nmap 7.94 - اسکنر شبکه.\nاینجا فقط شبیه‌سازی می‌شود؛ برای کار واقعی، ابزار را روی سیستم خودت نصب کن و فقط روی سیستم‌های خودت یا با اجازه صاحبش استفاده کن.' },
+          'hashcat.txt': { type: 'file', body: 'Hashcat 6.2.6 - بازیابی رمز.\nفقط برای بازیابی رمزهای خودت؛ هر استفاده دیگر غیرقانونی است.' },
+          'python.txt': { type: 'file', body: 'Python 3.12 - زبان محبوب اتوماسیون، هوش مصنوعی و امنیت.' },
+        } },
+        'flag.txt': { type: 'file', body: 'فلگ پیدا شد! DZ{w3lc0me_t0_th3_gr1d}\nاین فلگ مخصوص کنجکاوهاست - به مدیر تیم نشونش بده ;)' },
+      } },
+    } },
+  } };
+}
+
+let term = null;
+
+function termPrefsLoad(uid){
+  try{ return JSON.parse(localStorage.getItem(TERM_KEY + uid)) || {}; }catch{ return {}; }
+}
+function termPrefsSave(){
+  if (!term) return;
+  const base = { host: term.host, theme: term.theme, hist: term.hist.slice(-60) };
+  try{
+    const s = JSON.stringify(term.pyEnv && term.pyEnv.vars ? term.pyEnv.vars : {});
+    if (s && s.length <= 4096){
+      const py = JSON.parse(s);
+      if (py && Object.keys(py).length) base.py = py;
+    }
+  }catch{}
+  try{ localStorage.setItem(TERM_KEY + term.uid, JSON.stringify(base)); }catch{}
+}
+function termNodeAt(path){
+  if (!term || !path.length || path[0] !== 'C:') return null;
+  let node = term.fs;
+  for (const p of path.slice(1)){
+    if (!node || !node.children || !node.children[p] || node.children[p].type !== 'dir') return null;
+    node = node.children[p];
+  }
+  return node;
+}
+function termPromptNode(){
+  if (term && term.pyMode) return pyPromptNode();
+  return el('span', { class: 'wt-prompt-seg' },
+    el('span', { class: 'c-cy' }, 'PS '),
+    el('span', { class: 'c-path' }, term.cwd.join('\\')),
+    el('span', { class: 'c-wh' }, '> ')
+  );
+}
+function pyPromptNode(){
+  return el('span', { class: 'wt-prompt-seg' }, el('span', { class: 'c-py' }, '>>> '));
+}
+function refreshInPrompt(){
+  const seg = document.querySelector('#view-term .wt-input-row .wt-prompt-seg');
+  if (seg) seg.replaceWith(termPromptNode());
+}
+function tline(text, cls){
+  if (!term || !term.out || !term.out.isConnected) return null;
+  const d = el('div', { class: 'wt-line' + (cls ? ' ' + cls : '') });
+  d.textContent = text == null ? '' : String(text);
+  term.out.append(d);
+  while (term.out.children.length > 600) term.out.firstChild.remove();
+  termScroll();
+  return d;
+}
+function tlines(arr, cls){ for (const t of (arr || [])) tline(t, cls); }
+function termScroll(){ if (term && term.body) term.body.scrollTop = term.body.scrollHeight; }
+function echoCmd(raw){
+  if (!term || !term.out) return;
+  term.out.append(el('div', { class: 'wt-line' }, termPromptNode(), String(raw || '')));
+  while (term.out.children.length > 600) term.out.firstChild.remove();
+  termScroll();
+}
+function termAnim(lines, clsMap, stepMs, done){
+  if (!term || !term.out) return;
+  if (matrix.reduce){ tlines(lines, null); if (done) done(); return; }
+  let i = 0;
+  const step = () => {
+    if (!term || !term.out || !term.out.isConnected) return;
+    tline(lines[i], clsMap && clsMap[i]);
+    i++;
+    if (i < lines.length) state.viewTimers.push(setTimeout(step, stepMs));
+    else if (done) done();
+  };
+  step();
+}
+/* ارزیاب عبارت ریاضی امن (بدون eval/Function) — شینتینگ‌یارد */
+function calcEval(src){
+  const s = String(src).replace(/[×]/g, '*').replace(/[÷]/g, '/').replace(/\s+/g, '');
+  if (!s || !/^[\d+\-*/()%]+$/.test(s)) throw 0;
+  const m = s.match(/\d+\.?\d*|[+\-*/()%]/g);
+  if (!m || m.join('') !== s) throw 0;
+  const prec = { '+': 1, '-': 1, '*': 2, '/': 2, '%': 2 };
+  const out = [], ops = [];
+  let prev = null;
+  for (let t of m){
+    if (/^\d/.test(t)){ out.push(parseFloat(t)); }
+    else if (t === '('){ ops.push(t); }
+    else if (t === ')'){
+      while (ops.length && ops[ops.length - 1] !== '(') out.push(ops.pop());
+      if (!ops.length) throw 0;
+      ops.pop();
+    } else {
+      if (t === '-' && (prev === null || prev === '(' || prec[prev])) t = '~';
+      const p = t === '~' ? 4 : prec[t];
+      while (ops.length){
+        const o = ops[ops.length - 1];
+        if (o === '(') break;
+        const q = o === '~' ? 4 : prec[o];
+        if (q >= p) out.push(ops.pop()); else break;
+      }
+      ops.push(t);
+    }
+    prev = t;
+  }
+  while (ops.length){ const o = ops.pop(); if (o === '(') throw 0; out.push(o); }
+  const st = [];
+  for (const x of out){
+    if (typeof x === 'number'){ st.push(x); continue; }
+    if (x === '~'){ const a = st.pop(); if (a === undefined) throw 0; st.push(-a); continue; }
+    const b = st.pop(), a2 = st.pop();
+    if (a2 === undefined || b === undefined) throw 0;
+    st.push(x === '+' ? a2 + b : x === '-' ? a2 - b : x === '*' ? a2 * b : x === '/' ? a2 / b : a2 % b);
+  }
+  if (st.length !== 1 || typeof st[0] !== 'number' || !isFinite(st[0])) throw 0;
+  return st[0];
+}
+
+/* ============================================================================
+   پایتون تعاملی ساده (py-sim) — شبیه‌ساز آموزشی کاملاً امن
+   توکنایزر + پارسر بازگشتی + مفسر؛ بدون eval/Function و بدون هر ورودی شبکه‌ای.
+   انواع: عدد (int/float) / رشته / لیست / bool / None. فقط دستورهای تک‌خطی.
+   ============================================================================ */
+const PY_MAX_ITEMS = 10000;
+const PY_STEPS_MAX = 6000;
+const PY_UNSUPPORTED = new Set(['else', 'elif', 'while', 'def', 'class', 'try', 'except', 'finally',
+  'with', 'lambda', 'global', 'nonlocal', 'yield', 'async', 'await', 'pass', 'break', 'continue',
+  'del', 'assert', 'raise']);
+function pyThrow(type, msg){ throw { pyErr: true, type, msg }; }
+function pyTypeName(v){
+  if (v === null || v === undefined) return 'NoneType';
+  if (typeof v === 'boolean') return 'bool';
+  if (typeof v === 'number') return Number.isInteger(v) ? 'int' : 'float';
+  if (typeof v === 'string') return 'str';
+  if (Array.isArray(v)) return 'list';
+  if (typeof v === 'function') return 'builtin_function_or_method';
+  if (v && v.__pyType) return 'type';
+  return 'object';
+}
+function pyTruth(v){
+  if (v === null || v === undefined) return false;
+  if (typeof v === 'boolean') return v;
+  if (typeof v === 'number') return v !== 0;
+  if (typeof v === 'string') return v.length > 0;
+  if (Array.isArray(v)) return v.length > 0;
+  return true;
+}
+function pyAsNum(v){
+  if (typeof v === 'number') return v;
+  if (typeof v === 'boolean') return v ? 1 : 0;
+  return null;
+}
+function pyEq(a, b){
+  if (Array.isArray(a) && Array.isArray(b)) return a.length === b.length && a.every((x, i) => pyEq(x, b[i]));
+  if (a === null || a === undefined || b === null || b === undefined) return (a == null) && (b == null);
+  if (typeof a === 'boolean' && typeof b === 'boolean') return a === b;
+  const na = pyAsNum(a), nb = pyAsNum(b);
+  if (na !== null && nb !== null && (typeof a === 'boolean' || typeof b === 'boolean')) return na === nb;
+  return a === b;
+}
+function pyIn(a, b){
+  if (typeof b === 'string'){
+    if (typeof a !== 'string') pyThrow('TypeError', "'in <string>' requires string as left operand, not " + pyTypeName(a));
+    return b.includes(a);
+  }
+  if (Array.isArray(b)) return b.some((x) => pyEq(x, a));
+  pyThrow('TypeError', "argument of type '" + pyTypeName(b) + "' is not iterable");
+}
+function pyReprStr(v){
+  const s = String(v);
+  if (s.includes("'") && !s.includes('"')) return '"' + s.replace(/\\/g, '\\\\').replace(/"/g, '\\"') + '"';
+  return "'" + s.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'";
+}
+function pyRepr(v, depth){
+  depth = depth || 0;
+  if (v === null || v === undefined) return 'None';
+  if (typeof v === 'boolean') return v ? 'True' : 'False';
+  if (typeof v === 'number') return String(v);
+  if (typeof v === 'string') return pyReprStr(v);
+  if (Array.isArray(v)){
+    if (depth > 4) return '[...]';
+    const items = v.slice(0, 200).map((x) => pyRepr(x, depth + 1));
+    if (v.length > 200) items.push('...');
+    return '[' + items.join(', ') + ']';
+  }
+  if (typeof v === 'function') return '<built-in function>';
+  if (v && v.__meth) return '<built-in method ' + v.m + ' of ' + pyTypeName(v.obj) + ' object>';
+  if (v && v.__pyType) return "<class '" + v.name + "'>";
+  return '<object>';
+}
+function pyStr(v){
+  if (typeof v === 'string') return v;
+  return pyRepr(v, 1);
+}
+/* — توکنایزر — */
+function pyTokens(src){
+  const s = String(src);
+  const out = [];
+  const ops = ['**=', '//=', '==', '!=', '<=', '>=', '**', '//', '+=', '-=', '*=', '/=', '%=',
+    '=', '+', '-', '*', '/', '%', '(', ')', '[', ']', ',', ':', '.', '<', '>'];
+  let i = 0;
+  while (i < s.length){
+    const c = s[i];
+    if (c === ' ' || c === '\t' || c === ';'){ i++; continue; }
+    if (c === '#') break;
+    if (c === '"' || c === "'"){
+      const q = c; i++;
+      let v = '';
+      while (i < s.length && s[i] !== q){
+        if (s[i] === '\\' && i + 1 < s.length){
+          const e = s[i + 1];
+          v += e === 'n' ? '\n' : e === 't' ? '\t' : e === '\\' ? '\\' : e === q ? q : e;
+          i += 2; continue;
+        }
+        if (s[i] === '\n') break;
+        v += s[i]; i++;
+      }
+      if (i >= s.length || s[i] !== q) pyThrow('SyntaxError', 'unterminated string literal');
+      i++;
+      out.push({ t: 'str', v }); continue;
+    }
+    if (/[0-9]/.test(c) || (c === '.' && /[0-9]/.test(s[i + 1] || ''))){
+      let j = i;
+      while (j < s.length && /[0-9_]/.test(s[j])) j++;
+      let isf = false;
+      if (s[j] === '.' && /[0-9]/.test(s[j + 1] || '')){
+        isf = true; j++;
+        while (j < s.length && /[0-9]/.test(s[j])) j++;
+      }
+      const v = parseFloat(s.slice(i, j).replace(/_/g, ''));
+      if (!isFinite(v)) pyThrow('SyntaxError', 'invalid number');
+      out.push({ t: 'num', v }); i = j; continue;
+    }
+    if (/[A-Za-z_]/.test(c)){
+      let j = i;
+      while (j < s.length && /[A-Za-z0-9_]/.test(s[j])) j++;
+      out.push({ t: 'name', v: s.slice(i, j) }); i = j; continue;
+    }
+    const op = ops.find((o) => s.startsWith(o, i));
+    if (!op) pyThrow('SyntaxError', 'invalid syntax');
+    out.push({ t: 'op', v: op });
+    i += op.length;
+  }
+  return out;
+}
+/* — پارسر بازگشتی (اولویت عملگرها مثل پایتون) — */
+function pyParser(tokens){
+  let p = 0;
+  const peek = () => tokens[p] || null;
+  const isOp = (v) => { const t = peek(); return !!t && t.t === 'op' && t.v === v; };
+  const isName = (v) => { const t = peek(); return !!t && t.t === 'name' && t.v === v; };
+  const eat = (v) => { if (!isOp(v)) pyThrow('SyntaxError', 'invalid syntax'); p++; };
+  function parseExpr(){ return parseOr(); }
+  function parseOr(){
+    let a = parseAnd();
+    while (isName('or')){ p++; a = { k: 'or', a, b: parseAnd() }; }
+    return a;
+  }
+  function parseAnd(){
+    let a = parseNot();
+    while (isName('and')){ p++; a = { k: 'and', a, b: parseNot() }; }
+    return a;
+  }
+  function parseNot(){
+    if (isName('not')){ p++; return { k: 'not', a: parseNot() }; }
+    return parseCmp();
+  }
+  function parseCmp(){
+    const a = parseArith();
+    const t = peek();
+    if (t && t.t === 'op' && (t.v === '==' || t.v === '!=' || t.v === '<' || t.v === '>' || t.v === '<=' || t.v === '>=')){
+      p++; return { k: 'cmp', op: t.v, a, b: parseArith() };
+    }
+    if (isName('in')){ p++; return { k: 'in', a, b: parseArith() }; }
+    if (isName('not') && tokens[p + 1] && tokens[p + 1].t === 'name' && tokens[p + 1].v === 'in'){
+      p += 2; return { k: 'not in', a, b: parseArith() };
+    }
+    return a;
+  }
+  function parseArith(){
+    let a = parseTerm();
+    while (isOp('+') || isOp('-')){ const op = tokens[p++].v; a = { k: 'bin', op, a, b: parseTerm() }; }
+    return a;
+  }
+  function parseTerm(){
+    let a = parseFactor();
+    while (isOp('*') || isOp('/') || isOp('//') || isOp('%')){
+      const op = tokens[p++].v;
+      a = { k: 'bin', op, a, b: parseFactor() };
+    }
+    return a;
+  }
+  function parseFactor(){
+    if (isOp('-')){ p++; return { k: 'neg', a: parseFactor() }; }
+    if (isOp('+')){ p++; return parseFactor(); }
+    return parsePower();
+  }
+  function parsePower(){
+    const a = parsePostfix();
+    if (isOp('**')){ p++; return { k: 'bin', op: '**', a, b: parseFactor() }; }
+    return a;
+  }
+  function parsePostfix(){
+    let a = parseAtom();
+    for (;;){
+      if (isOp('(')){
+        p++;
+        const args = [];
+        if (!isOp(')')){ args.push(parseExpr()); while (isOp(',')){ p++; args.push(parseExpr()); } }
+        eat(')');
+        a = { k: 'call', f: a, args }; continue;
+      }
+      if (isOp('[')){ p++; const idx = parseExpr(); eat(']'); a = { k: 'idx', a, i: idx }; continue; }
+      if (isOp('.')){
+        p++;
+        const t = tokens[p++];
+        if (!t || t.t !== 'name') pyThrow('SyntaxError', 'invalid syntax');
+        a = { k: 'meth', a, m: t.v }; continue;
+      }
+      break;
+    }
+    return a;
+  }
+  function parseAtom(){
+    const t = peek();
+    if (!t) pyThrow('SyntaxError', 'invalid syntax');
+    if (t.t === 'num'){ p++; return { k: 'num', v: t.v }; }
+    if (t.t === 'str'){ p++; return { k: 'str', v: t.v }; }
+    if (t.t === 'name'){
+      if (t.v === 'True'){ p++; return { k: 'bool', v: true }; }
+      if (t.v === 'False'){ p++; return { k: 'bool', v: false }; }
+      if (t.v === 'None'){ p++; return { k: 'none' }; }
+      p++; return { k: 'var', v: t.v };
+    }
+    if (t.t === 'op' && t.v === '('){ p++; const e = parseExpr(); eat(')'); return e; }
+    if (t.t === 'op' && t.v === '['){
+      p++;
+      const items = [];
+      if (!isOp(']')){
+        items.push(parseExpr());
+        while (isOp(',')){ p++; if (isOp(']')) break; items.push(parseExpr()); }
+      }
+      eat(']');
+      return { k: 'list', items };
+    }
+    pyThrow('SyntaxError', 'invalid syntax');
+  }
+  return {
+    get pos(){ return p; }, set pos(v){ p = v; },
+    isOpTok: isOp, isNameTok: isName,
+    parseExpr,
+    mustEnd(){ if (p < tokens.length) pyThrow('SyntaxError', 'invalid syntax'); },
+    restTokens: () => tokens.slice(p),
+  };
+}
+/* — ارزیاب گره‌ها — */
+function pyEvalNode(n, env){
+  switch (n.k){
+    case 'num': case 'str': case 'bool': return n.v;
+    case 'none': return null;
+    case 'list': return n.items.map((x) => pyEvalNode(x, env));
+    case 'var': {
+      if (Object.prototype.hasOwnProperty.call(env.vars, n.v)) return env.vars[n.v];
+      const b = PY_BUILTINS[n.v];
+      if (b) return b;
+      pyThrow('NameError', "name '" + n.v + "' is not defined");
+      return null;
+    }
+    case 'or': { const a = pyEvalNode(n.a, env); return pyTruth(a) ? a : pyEvalNode(n.b, env); }
+    case 'and': { const a = pyEvalNode(n.a, env); return pyTruth(a) ? pyEvalNode(n.b, env) : a; }
+    case 'not': return !pyTruth(pyEvalNode(n.a, env));
+    case 'cmp': {
+      const a = pyEvalNode(n.a, env), b = pyEvalNode(n.b, env);
+      const sa = typeof a === 'string', sb = typeof b === 'string';
+      let r;
+      if (sa && sb){
+        r = (n.op === '==') ? a === b : (n.op === '!=') ? a !== b
+          : (n.op === '<') ? a < b : (n.op === '>') ? a > b : (n.op === '<=') ? a <= b : a >= b;
+      } else if (!sa && !sb){
+        const na = pyAsNum(a), nb = pyAsNum(b);
+        if (na === null || nb === null) pyThrow('TypeError', "'" + n.op + "' not supported between instances of '" + pyTypeName(a) + "' and '" + pyTypeName(b) + "'");
+        r = (n.op === '==') ? na === nb : (n.op === '!=') ? na !== nb
+          : (n.op === '<') ? na < nb : (n.op === '>') ? na > nb : (n.op === '<=') ? na <= nb : na >= nb;
+      } else {
+        if (n.op === '==') return false;
+        if (n.op === '!=') return true;
+        pyThrow('TypeError', "'" + n.op + "' not supported between instances of '" + pyTypeName(a) + "' and '" + pyTypeName(b) + "'");
+      }
+      return r;
+    }
+    case 'in': return pyIn(pyEvalNode(n.a, env), pyEvalNode(n.b, env));
+    case 'not in': return !pyIn(pyEvalNode(n.a, env), pyEvalNode(n.b, env));
+    case 'bin': return pyNumOp(n.op, pyEvalNode(n.a, env), pyEvalNode(n.b, env));
+    case 'neg': {
+      const v = pyAsNum(pyEvalNode(n.a, env));
+      if (v === null) pyThrow('TypeError', "bad operand type for unary -: '" + pyTypeName(n.a) + "'");
+      return -v;
+    }
+    case 'idx': {
+      const o = pyEvalNode(n.a, env), iv = pyEvalNode(n.i, env);
+      if (typeof o === 'string' || Array.isArray(o)){
+        if (typeof iv !== 'number' || !Number.isInteger(iv)) pyThrow('TypeError', pyTypeName(o) + ' indices must be integers');
+        const idx = iv < 0 ? o.length + iv : iv;
+        if (idx < 0 || idx >= o.length) pyThrow('IndexError', pyTypeName(o) + ' index out of range');
+        return o[idx];
+      }
+      pyThrow('TypeError', "'" + pyTypeName(o) + "' object is not subscriptable");
+      return null;
+    }
+    case 'meth': {
+      const o = pyEvalNode(n.a, env);
+      return { __meth: true, obj: o, m: n.m };
+    }
+    case 'call': {
+      const fv = pyEvalNode(n.f, env);
+      const args = n.args.map((x) => pyEvalNode(x, env));
+      if (fv && fv.__meth) return pyCallMethod(fv.obj, fv.m, args);
+      if (typeof fv === 'function'){
+        if (env.steps > PY_STEPS_MAX) pyThrow('TimeoutError', 'اجرای برنامه بیشتر از حد مجاز شبیه‌ساز طول کشید');
+        return fv(...args);
+      }
+      pyThrow('TypeError', "'" + pyTypeName(fv) + "' object is not callable");
+      return null;
+    }
+  }
+  pyThrow('SyntaxError', 'invalid syntax');
+}
+function pyNumOp(op, a, b){
+  if (op === '+'){
+    if (typeof a === 'string' && typeof b === 'string') return a + b;
+    if (Array.isArray(a) && Array.isArray(b)){
+      if (a.length + b.length > PY_MAX_ITEMS) pyThrow('MemoryError', 'لیست خیلی بزرگ شد (سقف شبیه‌ساز)');
+      return a.concat(b);
+    }
+    const na = pyAsNum(a), nb = pyAsNum(b);
+    if (na !== null && nb !== null) return na + nb;
+  } else if (op === '*'){
+    const nm = pyAsNum(a), nm2 = pyAsNum(b);
+    if (nm !== null && nm2 !== null) return nm * nm2;
+    if (typeof a === 'string' && typeof b === 'number') return b <= 0 ? '' : a.repeat(Math.floor(b));
+    if (typeof a === 'number' && typeof b === 'string') return a <= 0 ? '' : b.repeat(Math.floor(a));
+    if (Array.isArray(a) && typeof b === 'number'){
+      const times = Math.max(0, Math.floor(b));
+      if (a.length * times > PY_MAX_ITEMS) pyThrow('MemoryError', 'لیست خیلی بزرگ شد (سقف شبیه‌ساز)');
+      const r = [];
+      for (let i = 0; i < times; i++) r.push(...a);
+      return r;
+    }
+    if (typeof a === 'number' && Array.isArray(b)) return pyNumOp('*', b, a);
+  } else {
+    const na = pyAsNum(a), nb = pyAsNum(b);
+    if (na === null || nb === null) pyThrow('TypeError', "unsupported operand type(s) for " + op + ": '" + pyTypeName(a) + "' and '" + pyTypeName(b) + "'");
+    switch (op){
+      case '-': return na - nb;
+      case '/': if (nb === 0) pyThrow('ZeroDivisionError', 'division by zero'); return na / nb;
+      case '//': if (nb === 0) pyThrow('ZeroDivisionError', 'integer division or modulo by zero'); return Math.floor(na / nb);
+      case '%': if (nb === 0) pyThrow('ZeroDivisionError', 'integer division or modulo by zero'); return ((na % nb) + nb) % nb;
+      case '**': {
+        if (Math.abs(na) > 1024 || Math.abs(nb) > 128) pyThrow('OverflowError', 'عدد‌ها برای شبیه‌ساز خیلی بزرگ‌اند');
+        return Math.pow(na, nb);
+      }
+    }
+  }
+  pyThrow('TypeError', "unsupported operand type(s) for " + op + ": '" + pyTypeName(a) + "' and '" + pyTypeName(b) + "'");
+  return null;
+}
+/* — متدهای رشته و لیست — */
+function pyCallMethod(obj, m, args){
+  if (typeof obj === 'string'){
+    const S = {
+      upper: () => obj.toUpperCase(),
+      lower: () => obj.toLowerCase(),
+      title: () => obj.replace(/(^|\s)(\S)/g, (_, a2, b2) => a2 + b2.toUpperCase()),
+      strip: () => obj.trim(),
+      count: (sub) => { if (typeof sub !== 'string' || sub === '') pyThrow('TypeError', 'must be str'); return obj.split(sub).length - 1; },
+      replace: (a2, b2) => {
+        if (typeof a2 !== 'string' || typeof b2 !== 'string' || a2 === '') pyThrow('TypeError', 'replace() arguments must be str');
+        return obj.split(a2).join(b2);
+      },
+      split: (sep) => {
+        if (sep === undefined || sep === null) return obj.trim() ? obj.trim().split(/\s+/) : [];
+        if (typeof sep !== 'string') pyThrow('TypeError', 'must be str');
+        if (sep === '') pyThrow('ValueError', 'empty separator');
+        return obj.split(sep);
+      },
+      startswith: (p2) => { if (typeof p2 !== 'string') pyThrow('TypeError', 'must be str'); return obj.startsWith(p2); },
+      endswith: (p2) => { if (typeof p2 !== 'string') pyThrow('TypeError', 'must be str'); return obj.endsWith(p2); },
+      find: (p2) => { if (typeof p2 !== 'string') pyThrow('TypeError', 'must be str'); return obj.indexOf(p2); },
+    };
+    if (S[m]) return S[m](...args);
+    pyThrow('AttributeError', "'str' object has no attribute '" + m + "'");
+  }
+  if (Array.isArray(obj)){
+    const L = {
+      append(v){ if (obj.length >= PY_MAX_ITEMS) pyThrow('MemoryError', 'لیست خیلی بزرگ شد'); obj.push(v); return null; },
+      pop(i){
+        if (!obj.length) pyThrow('IndexError', 'pop from empty list');
+        const idx = i === undefined ? obj.length - 1 : i;
+        if (typeof idx !== 'number' || !Number.isInteger(idx)) pyThrow('TypeError', 'integer index required');
+        if (idx < 0 || idx >= obj.length) pyThrow('IndexError', 'pop index out of range');
+        return obj.splice(idx, 1)[0];
+      },
+      sort(){
+        obj.sort((x, y) => {
+          if (typeof x === 'string' && typeof y === 'string') return x < y ? -1 : x > y ? 1 : 0;
+          const nx = pyAsNum(x), ny = pyAsNum(y);
+          if (nx === null || ny === null) pyThrow('TypeError', "'<' not supported between instances of '" + pyTypeName(x) + "' and '" + pyTypeName(y) + "'");
+          return nx - ny;
+        });
+        return null;
+      },
+      reverse(){ obj.reverse(); return null; },
+      count(v){ return obj.filter((x) => pyEq(x, v)).length; },
+      index(v){ const i = obj.findIndex((x) => pyEq(x, v)); if (i === -1) pyThrow('ValueError', pyRepr(v) + ' is not in list'); return i; },
+      remove(v){ const i = obj.findIndex((x) => pyEq(x, v)); if (i === -1) pyThrow('ValueError', 'list.remove(x): x not in list'); obj.splice(i, 1); return null; },
+      clear(){ obj.length = 0; return null; },
+      copy(){ return obj.slice(); },
+    };
+    if (L[m]) return L[m](...args);
+    pyThrow('AttributeError', "'list' object has no attribute '" + m + "'");
+  }
+  pyThrow('AttributeError', "'" + pyTypeName(obj) + "' object has no attribute '" + m + "'");
+}
+/* — توابع داخلی (builtins) — */
+const PY_BUILTINS = {
+  print(...args){
+    tline(args.map((x) => pyStr(x)).join(' '), 'wh');
+    return null;
+  },
+  len(v){
+    if (typeof v === 'string' || Array.isArray(v)) return v.length;
+    pyThrow('TypeError', "object of type '" + pyTypeName(v) + "' has no len()");
+  },
+  range(a, b, c){
+    let st = 0, en = 0, sp = 1;
+    if (b === undefined){ en = a; } else { st = a; en = b; sp = c === undefined ? 1 : c; }
+    [st, en, sp].forEach((x) => { if (typeof x !== 'number' || !Number.isInteger(x)) pyThrow('TypeError', 'range() arguments must be integers'); });
+    if (sp === 0) pyThrow('ValueError', 'range() arg 3 must not be zero');
+    const cnt = Math.max(0, Math.ceil((en - st) / sp));
+    if (cnt > PY_MAX_ITEMS) pyThrow('MemoryError', 'range بیشتر از ' + PY_MAX_ITEMS + ' آیتم است — برای شبیه‌ساز زیاد است!');
+    const r = [];
+    for (let i = 0; i < cnt; i++) r.push(st + i * sp);
+    return r;
+  },
+  sum(v, ...rest){
+    if (!Array.isArray(v)) pyThrow('TypeError', "sum() needs a list, got '" + pyTypeName(v) + "'");
+    let acc = rest.length ? (pyAsNum(rest[0]) ?? 0) : 0;
+    for (const x of v){ const n = pyAsNum(x); if (n === null) pyThrow('TypeError', "sum() only works on numbers"); acc += n; }
+    return acc;
+  },
+  max(...args){
+    const arr = args.length === 1 ? (Array.isArray(args[0]) ? args[0] : pyThrow('TypeError', 'max() needs a list')) : args;
+    if (!arr.length) pyThrow('ValueError', 'max() arg is an empty sequence');
+    if (typeof arr[0] === 'string'){ arr.forEach((x) => { if (typeof x !== 'string') pyThrow('TypeError', 'max() mixed types'); }); return arr.slice().sort()[arr.length - 1]; }
+    let best = pyAsNum(arr[0]);
+    if (best === null) pyThrow('TypeError', 'max() only works on numbers');
+    for (const x of arr){ const n = pyAsNum(x); if (n === null) pyThrow('TypeError', 'max() only works on numbers'); if (n > best) best = n; }
+    return best;
+  },
+  min(...args){
+    const arr = args.length === 1 ? (Array.isArray(args[0]) ? args[0] : pyThrow('TypeError', 'min() needs a list')) : args;
+    if (!arr.length) pyThrow('ValueError', 'min() arg is an empty sequence');
+    if (typeof arr[0] === 'string'){ arr.forEach((x) => { if (typeof x !== 'string') pyThrow('TypeError', 'min() mixed types'); }); return arr.slice().sort()[0]; }
+    let best = pyAsNum(arr[0]);
+    if (best === null) pyThrow('TypeError', 'min() only works on numbers');
+    for (const x of arr){ const n = pyAsNum(x); if (n === null) pyThrow('TypeError', 'min() only works on numbers'); if (n < best) best = n; }
+    return best;
+  },
+  sorted(v){
+    if (!Array.isArray(v)) pyThrow('TypeError', "sorted() needs a list, got '" + pyTypeName(v) + "'");
+    const cp = v.slice();
+    pyCallMethod(cp, 'sort', []);
+    return cp;
+  },
+  abs(v){ const n = pyAsNum(v); if (n === null) pyThrow('TypeError', "bad operand type for abs(): '" + pyTypeName(v) + "'"); return Math.abs(n); },
+  round(v, nd){
+    const n = pyAsNum(v);
+    if (n === null) pyThrow('TypeError', 'round() needs a number');
+    const d = nd === undefined ? 0 : nd;
+    if (typeof d !== 'number' || !Number.isInteger(d)) pyThrow('TypeError', 'round() ndigits must be int');
+    const f = Math.pow(10, d);
+    return Math.round(n * f) / f;
+  },
+  int(v, base){
+    if (typeof v === 'boolean') return v ? 1 : 0;
+    if (typeof v === 'number') return Math.trunc(v);
+    if (typeof v === 'string'){
+      const t = v.trim();
+      const n = base === undefined ? (/^[+-]?\d+$/.test(t) ? parseInt(t, 10) : NaN) : parseInt(t, base);
+      if (isNaN(n)) pyThrow('ValueError', "invalid literal for int() with base " + (base === undefined ? 10 : base) + ": " + pyReprStr(v));
+      return n;
+    }
+    pyThrow('TypeError', "int() argument must be a string or a number, not '" + pyTypeName(v) + "'");
+  },
+  float(v){
+    if (typeof v === 'boolean') return v ? 1 : 0;
+    if (typeof v === 'number') return v;
+    if (typeof v === 'string'){
+      const t = v.trim();
+      if (!/^[+-]?(\d+\.?\d*|\.\d+)$/.test(t)) pyThrow('ValueError', 'could not convert string to float: ' + pyReprStr(v));
+      return parseFloat(t);
+    }
+    pyThrow('TypeError', "float() argument must be a string or a number, not '" + pyTypeName(v) + "'");
+  },
+  str(v){ return pyStr(v); },
+  bool(v){ return pyTruth(v); },
+  type(v){ return { __pyType: true, name: pyTypeName(v) }; },
+  list(v){
+    if (Array.isArray(v)) return v.slice();
+    if (typeof v === 'string') return v.split('');
+    pyThrow('TypeError', "'" + pyTypeName(v) + "' object is not iterable");
+  },
+  input(){ pyThrow('NotImplementedError', 'input() در ترمینال وب کار نمی‌کند — به‌جاش متغیر بساز :)'); },
+};
+/* — اجرای یک خط دستور پایتون — */
+function pyExecTokens(tokens, env){
+  const t0 = tokens[0];
+  if (t0 && t0.t === 'name' && (t0.v === 'for' || t0.v === 'if')) return pyExecBlock(tokens, env);
+  const P = pyParser(tokens);
+  if (t0 && t0.t === 'name'){
+    if (tokens[1] && tokens[1].t === 'op' && ['+=', '-=', '*=', '/=', '//=', '**=', '%='].includes(tokens[1].v)){
+      const name = t0.v;
+      if (!Object.prototype.hasOwnProperty.call(env.vars, name)) pyThrow('NameError', "name '" + name + "' is not defined");
+      P.pos = 2;
+      const val = pyEvalNode(P.parseExpr(), env);
+      P.mustEnd();
+      env.vars[name] = pyNumOp(tokens[1].v.slice(0, -1), env.vars[name], val);
+      return;
+    }
+    if (tokens[1] && tokens[1].t === 'op' && tokens[1].v === '='){
+      P.pos = 2;
+      const val = pyEvalNode(P.parseExpr(), env);
+      P.mustEnd();
+      env.vars[t0.v] = val;
+      return;
+    }
+  }
+  const v = pyEvalNode(P.parseExpr(), env);
+  P.mustEnd();
+  if (v !== null && v !== undefined) tline(pyRepr(v), 'wh');
+}
+function pyExecBlock(tokens, env){
+  const P = pyParser(tokens);
+  const kind = tokens[0].v; // 'for' | 'if'
+  P.pos = 1;
+  let varName = null;
+  if (kind === 'for'){
+    const t1 = tokens[1];
+    varName = (t1 && t1.t === 'name' && t1.v !== 'in') ? t1.v : null;
+    if (!varName) pyThrow('SyntaxError', 'invalid syntax');
+    const t2 = tokens[2];
+    if (!(t2 && t2.t === 'name' && t2.v === 'in')) pyThrow('SyntaxError', 'invalid syntax');
+    P.pos = 3;
+  }
+  const cond = P.parseExpr();
+  if (!P.isOpTok(':')) pyThrow('SyntaxError', "expected ':' — " + kind + ' فقط تک‌خطی پشتیبانی می‌شود');
+  P.pos++;
+  const body = P.restTokens();
+  if (!body.length) pyThrow('SyntaxError', 'بدنه ' + kind + ' خالی است (بعد از : یک دستور بنویس)');
+  if (kind === 'if'){
+    if (pyTruth(pyEvalNode(cond, env))) pyExecTokens(body, env);
+    return;
+  }
+  const iter = pyEvalNode(cond, env);
+  let seq;
+  if (Array.isArray(iter)) seq = iter;
+  else if (typeof iter === 'string') seq = iter.split('');
+  else pyThrow('TypeError', "'" + pyTypeName(iter) + "' object is not iterable");
+  for (const item of seq){
+    env.steps++;
+    if (env.steps > PY_STEPS_MAX) pyThrow('TimeoutError', 'حلقه بیشتر از حد مجاز شبیه‌ساز تکرار شد');
+    env.vars[varName] = item;
+    pyExecTokens(body.slice(), env);
+    if (env.leave) break;
+  }
+}
+function pyExecLine(src, env){
+  const line = String(src || '').trim();
+  if (!line) return;
+  if (/^(exit|quit)\s*(\(\s*\))?$/.test(line)){ env.leave = true; return; }
+  if (/^help(\s*\(\s*\))?$/.test(line)){ pyHelpLines(); return; }
+  if (/^(copyright|credits|license|version)(\s*\(\s*\))?$/.test(line)){
+    tline('DADESAZAN py-sim 3.12.1 — نسخه آموزشی پایتون داخل ترمینال تیم داده‌سازان.', 'sys');
+    tline('این شبیه‌ساز کاملاً داخل مرورگر تو اجرا می‌شود و همه توابع پایتون واقعی را ندارد.', 'dim');
+    return;
+  }
+  const kw = line.split(/[\s(:]/, 1)[0];
+  if (PY_UNSUPPORTED.has(kw)){
+    tline('SyntaxError: \'' + kw + "' در این نسخهٔ تک‌خطی پشتیبانی نمی‌شود (فقط for/if تک‌خطی).", 'err');
+    return;
+  }
+  if (/^(import|from)\s/.test(line)){
+    tline('ImportError: این نسخهٔ آموزشی import ندارد؛ همه توابع پایه همین‌جا هستند — help()', 'err');
+    return;
+  }
+  env.steps = env.steps || 0;
+  let tokens;
+  try{ tokens = pyTokens(line); }catch(e){ throw pyNormErr(e); }
+  if (!tokens.length) return;
+  try{ pyExecTokens(tokens, env); }
+  catch(e){ throw pyNormErr(e); }
+}
+function pyNormErr(e){
+  if (e && e.pyErr) return e;
+  return { pyErr: true, type: 'InternalError', msg: String((e && e.message) || e || 'unknown') };
+}
+function pyHelpLines(){
+  tlines([
+    'پایتونِ شبیه‌ساز داده‌سازان — چیزهایی که همین‌جا کار می‌کنند:',
+    '  print("salam")              چاپ کردن',
+    '  2 + 3 * 4    2**10    7//2  محاسبه (+ - * / // % **)',
+    '  x = 5                       متغیر (برای حساب تو ذخیره می‌شود)',
+    '  "ab" + "cd"     "ha" * 3    رشته‌ها',
+    '  a = [1, 2, 3]    a[0]       لیست و ایندکس',
+    '  a.append(4)  a.sort()  len(a)  sum(a)  کار با لیست',
+    '  for i in range(5): print(i)     حلقه (تک‌خطی)',
+    '  if x > 3: print("big")          شرط (تک‌خطی)',
+    '  len sum max min sorted abs round int float str bool type list',
+    '  رشته: .upper() .lower() .title() .strip() .replace(a,b) .split() .count(x)',
+    '  مقایسه: ==  !=  <  >  <=  >=    |    3 in [1,2,3]    |    and  or  not',
+    '  خروج از پایتون: exit()',
+  ], 'sys');
+}
+function pyRunCode(code){
+  const lines = String(code).split(/\r?\n/);
+  for (const ln of lines){
+    try{ pyExecLine(ln, term.pyEnv); }
+    catch(e){
+      const pe = pyNormErr(e);
+      tline(pe.type + ': ' + pe.msg, 'err');
+      return;
+    }
+    term.pyEnv.leave = false;
+  }
+}
+/* — echo خط پایتون با پرامپت >>> — */
+function pyEcho(line){
+  if (!term || !term.out) return;
+  term.out.append(el('div', { class: 'wt-line' }, pyPromptNode(), String(line || '')));
+  while (term.out.children.length > 600) term.out.firstChild.remove();
+  termScroll();
+}
+/* — یک خط ورودی REPL پایتون — */
+function pyLine(raw){
+  if (!term) return;
+  const line = String(raw || '').replace(/\s+$/, '');
+  pyEcho(line);
+  if (!line.trim()) return;
+  term.pyHist.push(line);
+  if (term.pyHist.length > 60) term.pyHist.shift();
+  term.pyIdx = -1;
+  const env = term.pyEnv;
+  try{ pyExecLine(line, env); }
+  catch(e){
+    const pe = pyNormErr(e);
+    tline(pe.type + ': ' + pe.msg, 'err');
+    if (pe.type === 'SyntaxError') tline('(فقط دستورهای تک‌خطی ساده — راهنما: help())', 'dim');
+  }
+  termPrefsSave();
+  if (env.leave){
+    env.leave = false;
+    term.pyMode = false;
+    tline('از پایتون خارج شدی و برگشتی به dzsh. (برای برگشت: python)', 'sys');
+    refreshInPrompt();
+  }
+}
+/* — پاک‌سازی متغیرهای بازیابی‌شده از localStorage — */
+function pySanitizeVars(v){
+  if (!v || typeof v !== 'object' || Array.isArray(v)) return {};
+  const out = {};
+  const okVal = (x, d) => {
+    if (d > 6) return false;
+    if (x === null) return true;
+    if (typeof x === 'boolean') return true;
+    if (typeof x === 'number') return isFinite(x);
+    if (typeof x === 'string') return x.length <= 2000;
+    if (Array.isArray(x)) return x.length <= 1000 && x.every((y) => okVal(y, d + 1));
+    return false;
+  };
+  for (const k of Object.keys(v)){
+    if (!/^[A-Za-z_][A-Za-z0-9_]{0,29}$/.test(k)) continue;
+    if (okVal(v[k], 0)) out[k] = v[k];
+  }
+  return out;
+}
+
+
+function renderTerm(){
+  const sec = $('#view-term');
+  const uid = (state.session && state.session.user && state.session.user.id) || 'guest';
+  const prefs = termPrefsLoad(uid);
+  const uname = state.profile ? state.profile.username : 'user';
+  const host = (prefs.host && /^[a-z0-9_\-]{2,20}$/.test(prefs.host)) ? prefs.host : uname;
+  const theme = TERM_THEMES[prefs.theme] ? prefs.theme : 'green';
+
+  term = {
+    uid, host, theme,
+    hist: Array.isArray(prefs.hist) ? prefs.hist.filter((x) => typeof x === 'string').slice(-60) : [],
+    hIdx: -1, cwd: ['C:', 'Users', host],
+    fs: termFS(host), out: null, body: null,
+    pyMode: false,
+    pyEnv: { vars: pySanitizeVars(prefs.py), leave: false, steps: 0 },
+    pyHist: [], pyIdx: -1,
+  };
+
+  const out = el('div', { class: 'wt-out' });
+  const input = el('input', { class: 'wt-input', type: 'text', 'aria-label': 'ورود دستور ترمینال',
+    autocomplete: 'off', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false' });
+  const inRow = el('div', { class: 'wt-input-row' }, termPromptNode(), input);
+  const body = el('div', { class: 'wt-body' }, out, inRow);
+  term.out = out; term.body = body;
+
+  const win = el('div', { class: 'wt', style: '--wt-accent:' + TERM_THEMES[theme] });
+  const titlebar = el('div', { class: 'wt-titlebar' },
+    el('div', { class: 'wt-tabs' },
+      el('div', { class: 'wt-tab' },
+        el('span', { class: 'wt-ico', html: iconSvg('term') }),
+        el('b', { text: term.host + '@dadesazan — dzsh' })
+      )
+    ),
+    el('div', { class: 'wt-wctl' },
+      el('button', { type: 'button', 'aria-label': 'کوچک کردن پنجره', text: '−',
+        onclick: () => { win.classList.toggle('wt-min'); termScroll(); } }),
+      el('button', { type: 'button', 'aria-label': 'بزرگ کردن پنجره', text: '□',
+        onclick: () => win.classList.toggle('wt-max') }),
+      el('button', { type: 'button', 'aria-label': 'بستن ترمینال', class: 'wt-wclose', text: '✕',
+        onclick: () => { termPrefsSave(); navigate('home'); } }),
+    )
+  );
+  win.append(titlebar, body);
+
+  body.addEventListener('click', () => { if (!getSelection().toString()) input.focus(); });
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter'){
+      e.preventDefault();
+      const v = input.value;
+      input.value = '';
+      submitTermCmd(v);
+    } else if (e.key === 'ArrowUp'){
+      e.preventDefault();
+      if (term.pyMode){
+        if (!term.pyHist.length) return;
+        term.pyIdx = (term.pyIdx === -1) ? term.pyHist.length - 1 : Math.max(0, term.pyIdx - 1);
+        input.value = term.pyHist[term.pyIdx];
+        return;
+      }
+      if (!term.hist.length) return;
+      term.hIdx = (term.hIdx === -1) ? term.hist.length - 1 : Math.max(0, term.hIdx - 1);
+      input.value = term.hist[term.hIdx];
+    } else if (e.key === 'ArrowDown'){
+      e.preventDefault();
+      if (term.pyMode){
+        if (term.pyIdx === -1) return;
+        term.pyIdx++;
+        if (term.pyIdx >= term.pyHist.length){ term.pyIdx = -1; input.value = ''; }
+        else input.value = term.pyHist[term.pyIdx];
+        return;
+      }
+      if (term.hIdx === -1) return;
+      term.hIdx++;
+      if (term.hIdx >= term.hist.length){ term.hIdx = -1; input.value = ''; }
+      else input.value = term.hist[term.hIdx];
+    } else if (e.key === 'Tab'){
+      e.preventDefault();
+      if (term.pyMode) return;
+      termComplete(input);
+    } else if (e.key === 'l' && e.ctrlKey){
+      e.preventDefault();
+      out.replaceChildren();
+    } else if (e.key === 'c' && e.ctrlKey && !getSelection().toString()){
+      if (term.pyMode){
+        pyEcho(input.value + '^C');
+        tline('KeyboardInterrupt', 'err');
+      } else {
+        echoCmd(input.value + '^C');
+      }
+      input.value = '';
+    } else if (e.key === 'Escape'){
+      input.value = '';
+    }
+  });
+
+  sec.replaceChildren(
+    el('div', { class: 'view-head' },
+      el('h2', { class: 'view-title' }, el('span', { html: iconSvg('term') }), 'ترمینال من', el('span', { class: 'en', text: 'TERMINAL' })),
+      el('button', { class: 'icon-btn', type: 'button', 'aria-label': 'شروع مجدد ترمینال', html: iconSvg('refresh'), onclick: () => renderTerm() })
+    ),
+    win
+  );
+
+  tline('DADESAZAN Terminal [Version ' + TERM_VERSION + ']', 'gr');
+  tline('(c) تیم داده‌سازان — ترمینال اختصاصی تو، ' + uname + '!', 'wh');
+  tline('* همه دستورها شبیه‌سازی آموزشی هستند؛ هیچ دستوری روی سرور یا سیستم دیگران اجرا نمی‌شود.', 'sys');
+  tline('* فهرست دستورها: help   |   راهنمای هر دستور: help <نام دستور>', 'cy');
+  tline(' ');
+  if (matchMedia('(hover: hover)').matches){ try{ input.focus(); }catch{} }
+}
+
+function submitTermCmd(raw){
+  if (!term) return;
+  if (term.pyMode){ pyLine(raw); return; }
+  const cmdline = String(raw || '').trim();
+  echoCmd(cmdline);
+  if (!cmdline) return;
+  term.hist.push(cmdline);
+  if (term.hist.length > 60) term.hist.shift();
+  term.hIdx = -1;
+  termPrefsSave();
+  const sp = cmdline.indexOf(' ');
+  const name = (sp === -1 ? cmdline : cmdline.slice(0, sp)).toLowerCase();
+  const rest = sp === -1 ? '' : cmdline.slice(sp + 1).trim();
+  const cmd = TERM_ALIAS[name] || name;
+  if (typeof TERM_CMDS[cmd] === 'function'){ TERM_CMDS[cmd](rest); return; }
+  if (TERM_VERSION_MAP[cmd]){ tlines(TERM_VERSION_MAP[cmd]); return; }
+  tline("'" + name + "' is not recognized as an internal or external command,", 'err');
+  tline('operable program or batch file. — دستور ناشناخته است؛ فهرست دستورها: help', 'sys');
+}
+
+function termComplete(input){
+  if (!term) return;
+  const v = input.value;
+  const parts = v.split(/\s+/);
+  const last = parts[parts.length - 1] || '';
+  let pool;
+  if (parts.length <= 1){
+    pool = [...Object.keys(TERM_CMDS), ...Object.keys(TERM_ALIAS), ...Object.keys(TERM_VERSION_MAP)];
+  } else {
+    const node = termNodeAt(term.cwd);
+    pool = Object.keys((node && node.children) || {});
+  }
+  const hits = last ? [...new Set(pool)].filter((x) => x.startsWith(last) && x !== last) : [];
+  if (!hits.length) return;
+  if (hits.length === 1){
+    parts[parts.length - 1] = hits[0];
+    input.value = parts.join(' ');
+  } else {
+    echoCmd(v);
+    tline(hits.join('   '), 'cy');
+  }
+}
+
+const TERM_TOOLS = [
+  { name: 'nmap',      ver: '7.94',    desc: 'اسکنر شبکه (شبیه‌سازی‌شده)' },
+  { name: 'wireshark', ver: '4.2.2',   desc: 'تحلیلگر بسته‌های شبکه' },
+  { name: 'hashcat',   ver: '6.2.6',   desc: 'بازیابی رمز (شبیه‌سازی‌شده)' },
+  { name: 'python',    ver: '3.12.1',  desc: 'زبان برنامه‌نویسی پایتون' },
+  { name: 'java',      ver: '21.0.1',  desc: 'جاوا - OpenJDK' },
+  { name: 'gcc',       ver: '13.2.0',  desc: 'کامپایلر C/C++' },
+  { name: 'git',       ver: '2.43.0',  desc: 'کنترل نسخه' },
+  { name: 'node',      ver: '20.11.0', desc: 'جاوااسکریپت سمت سرور' },
+];
+const TERM_VERSION_MAP = {
+  python:    ['Python 3.12.1 (DADESAZAN Build)'],
+  java:      ['openjdk version "21.0.1"', 'OpenJDK Runtime Environment DADESAZAN (build 21.0.1+12)'],
+  git:       ['git version 2.43.0'],
+  gcc:       ['gcc (DADESAZAN GCC) 13.2.0'],
+  node:      ['v20.11.0'],
+  nmap:      ['Nmap version 7.94 ( https://nmap.org )'],
+  hashcat:   ['Hashcat v6.2.6 — شبیه‌سازی‌شده'],
+  wireshark: ['Wireshark 4.2.2 (DADESAZAN Build)'],
+};
+const TERM_HELP = [
+  { cmd: 'help',     args: '[دستور]',       desc: 'فهرست دستورها یا راهنمای یک دستور' },
+  { cmd: 'clear',    alias: 'cls',          desc: 'پاک کردن صفحه ترمینال' },
+  { cmd: 'whoami',                          desc: 'اطلاعات حساب من (واقعی از پروفایل)' },
+  { cmd: 'id',                              desc: 'شناسه یکتا و تاریخ عضویت من' },
+  { cmd: 'status',                          desc: 'وضعیت عضویت من در تیم (واقعی)' },
+  { cmd: 'score',                           desc: 'امتیاز فعلی من (واقعی)' },
+  { cmd: 'top',                             desc: '۵ نفر اول برترین‌ها (واقعی از دیتابیس)' },
+  { cmd: 'date',                            desc: 'تاریخ و ساعت الان' },
+  { cmd: 'echo',     args: '<متن>',         desc: 'چاپ متن؛ echo متن > file.txt فایل می‌سازد' },
+  { cmd: 'ls',       alias: 'dir',          desc: 'فهرست پوشه جاری' },
+  { cmd: 'cd',       args: '<پوشه>',        desc: 'جابجایی بین پوشه‌ها (cd .. برگشت)' },
+  { cmd: 'cat',      args: '<فایل>',        desc: 'نمایش محتوای فایل' },
+  { cmd: 'pwd',                             desc: 'مسیر پوشه جاری' },
+  { cmd: 'tree',                            desc: 'درخت پوشه‌ها از مسیر جاری' },
+  { cmd: 'ping',     args: '[هاست]',        desc: 'پینگ شبیه‌سازی‌شده' },
+  { cmd: 'nmap',     args: '[هدف]',         desc: 'اسکن شبیه‌سازی‌شده (آموزشی)' },
+  { cmd: 'tools',                           desc: 'ابزارهای نصب‌شده در ترمینال' },
+  { cmd: 'calc',     args: '<عبارت>',       desc: 'ماشین‌حساب؛ مثل calc (2+3)*4' },
+  { cmd: 'python',   alias: 'python3',      args: '[file.py|-c]',  desc: 'پایتون تعاملی! print/متغیر/لیست/for — راهنما: help()' },
+  { cmd: 'pip',      alias: 'pip3',         desc: 'نصب پکیج — اینجا لازم نیست؛ امتحان کن' },
+  { cmd: 'theme',    args: '[نام]',         desc: 'رنگ ترمینال: green amber red blue cyan purple white' },
+  { cmd: 'hostname', args: '[نام]',         desc: 'نام سیستم خودت را عوض کن (ذخیره می‌شود)' },
+  { cmd: 'history',                         desc: 'تاریخچه دستورهای من' },
+  { cmd: 'matrix',   args: '[on|off]',      desc: 'بارش ماتریکس پس‌زمینه سایت' },
+  { cmd: 'ipconfig',                        desc: 'اطلاعات شبکه شبیه‌سازی‌شده' },
+  { cmd: 'banner',                          desc: 'بنر تیم داده‌سازان' },
+  { cmd: 'neofetch',                        desc: 'مشخصات سیستم به سبک neofetch' },
+  { cmd: 'ver',                             desc: 'نسخه ترمینال' },
+  { cmd: 'sudo',                            desc: 'امتحانش کن!' },
+  { cmd: 'exit',     alias: 'quit|logout',  desc: 'راهنمای خروج واقعی از حساب' },
+  { cmd: 'about',                           desc: 'درباره این ترمینال' },
+];
+const TERM_CMDS = {
+  help(a){
+    if (a){
+      const q = a.split(/\s+/)[0].toLowerCase();
+      const h = TERM_HELP.find((x) => x.cmd === q || (x.alias || '').split('|').includes(q));
+      if (!h) return tline("help: راهنمایی برای '" + q + "' پیدا نشد. فهرست کامل: help", 'err');
+      tline(h.cmd + (h.args ? ' ' + h.args : ''), 'gr');
+      tline('  ' + h.desc, 'sys');
+      if (h.alias) tline('  نام‌های دیگر: ' + h.alias, 'dim');
+      return;
+    }
+    tline('دستورهای ترمینال داده‌سازان (dzsh):', 'ye');
+    for (const h of TERM_HELP){
+      tline('  ' + h.cmd.padEnd(10) + (h.args ? ' ' + h.args : '').padEnd(19) + ' ' + h.desc);
+    }
+    tline('نکته: python را تنها تایپ کن تا پایتونِ تعاملی باز شود؛ به java/git/node/nmap/hashcat/wireshark هم --version بده.', 'cy');
+    tline('کلیدها: ↑/↓ تاریخچه  |  Tab تکمیل خودکار  |  Ctrl+L پاک کردن صفحه', 'dim');
+  },
+  clear(){ if (term.out) term.out.replaceChildren(); },
+  whoami(){
+    const p = state.profile || {};
+    tline('dadesazan\\' + (p.username || 'user'), 'gr');
+    tline('نام: ' + (p.full_name || '—') + '   نقش: ' + (p.role === 'admin' ? 'مدیر تیم' : 'عضو') +
+      '   وضعیت: ' + (STATUS_LABEL[p.membership_status] || STATUS_LABEL.none).text +
+      '   امتیاز: ' + (p.score == null ? '0' : p.score), 'sys');
+  },
+  id(){
+    const uid = (state.session && state.session.user && state.session.user.id) || '';
+    tline('uid=' + (uid ? uid.slice(0, 8) + '…' + uid.slice(-4) : '—'), 'cy');
+    tline('member since ' + fmtDate(state.profile && state.profile.created_at, false), 'sys');
+  },
+  status(){ tline('وضعیت عضویت: ' + (STATUS_LABEL[(state.profile || {}).membership_status] || STATUS_LABEL.none).text, 'cy'); },
+  score(){
+    tline('امتیاز تو: ' + ((state.profile && state.profile.score) || 0), 'gr');
+    tline('امتیاز را مدیر تیم ثبت می‌کند؛ با فعالیت و کمک به بقیه بیشترش کن!', 'sys');
+  },
+  async top(){
+    tline('در حال خواندن جدول امتیازات از دیتابیس تیم...', 'sys');
+    try{
+      const { data, error } = await state.client.rpc('get_leaderboard');
+      if (error) throw error;
+      const rows = (data || []).slice(0, 5);
+      if (!rows.length){ tline('جدول هنوز خالی است.', 'warn'); return; }
+      tline('RANK  USER              SCORE', 'cy');
+      rows.forEach((r, i) => tline(String(i + 1).padEnd(6) + String(r.username).padEnd(18) + String(r.score)));
+      tline('* این خروجی واقعی از دیتابیس تیم است.', 'sys');
+    }catch(e){ tline(mapError(e), 'err'); }
+  },
+  date(){
+    tline(new Date().toLocaleString('fa-IR'), 'wh');
+    tline(new Date().toISOString().replace('T', ' ').slice(0, 19) + ' UTC', 'dim');
+  },
+  echo(a){
+    const m = String(a || '').match(/^(.*?)\s*>\s*([a-zA-Z0-9_\-\.]{1,32})$/);
+    if (m){
+      const node = termNodeAt(term.cwd);
+      if (!node) return tline('echo: مسیر نامعتبر است.', 'err');
+      node.children[m[2]] = { type: 'file', body: m[1] };
+      return tline('ذخیره شد: ' + term.cwd.join('\\') + '\\' + m[2], 'ok');
+    }
+    tline(a || '', 'wh');
+  },
+  ls(){
+    const node = termNodeAt(term.cwd);
+    if (!node) return tline('مسیر نامعتبر است.', 'err');
+    const kids = Object.keys(node.children || {});
+    if (!kids.length) return tline('(این پوشه خالی است)', 'dim');
+    tline('    Directory: ' + term.cwd.join('\\'), 'sys');
+    for (const k of kids){
+      const c = node.children[k];
+      tline((c.type === 'dir' ? '  d  ' : '  -  ') + k, c.type === 'dir' ? 'cy' : 'wh');
+    }
+  },
+  cd(a){
+    const arg = String(a || '').trim();
+    if (!arg || arg === '~'){ term.cwd = ['C:', 'Users', term.host]; return refreshInPrompt(); }
+    if (arg === '\\' || arg === '/'){ term.cwd = ['C:']; return refreshInPrompt(); }
+    const nc = term.cwd.slice();
+    for (const p of arg.split(/[\\/]+/).filter(Boolean)){
+      if (p === '.') continue;
+      if (p === '..'){ if (nc.length > 1) nc.pop(); continue; }
+      const node = termNodeAt(nc);
+      const nx = node && node.children && node.children[p];
+      if (!nx || nx.type !== 'dir') return tline("cd: پوشه '" + p + "' پیدا نشد.", 'err');
+      nc.push(p);
+    }
+    term.cwd = nc;
+    refreshInPrompt();
+  },
+  cat(a){
+    const name = String(a || '').trim();
+    if (!name) return tline('استفاده: cat <نام فایل>', 'ye');
+    const node = termNodeAt(term.cwd);
+    const f = node && node.children && node.children[name];
+    if (!f) return tline("cat: فایل '" + name + "' در این پوشه نیست.", 'err');
+    if (f.type === 'dir') return tline("cat: '" + name + "' یک پوشه است، نه فایل.", 'err');
+    tlines(String(f.body).split('\n'));
+  },
+  pwd(){ tline(term.cwd.join('\\'), 'cy'); },
+  tree(){
+    const root = termNodeAt(term.cwd);
+    if (!root) return tline('tree: مسیر نامعتبر است.', 'err');
+    tline(term.cwd.join('\\'), 'cy');
+    const walk = (node, prefix) => {
+      const kids = Object.keys(node.children || {});
+      kids.forEach((k, i) => {
+        const lastKid = i === kids.length - 1;
+        const c = node.children[k];
+        const isDir = c.type === 'dir';
+        tline(prefix + (lastKid ? '└── ' : '├── ') + k + (isDir ? '/' : ''), isDir ? 'cy' : 'wh');
+        if (isDir) walk(c, prefix + (lastKid ? '    ' : '│   '));
+      });
+    };
+    walk(root, '');
+  },
+  ping(a){
+    const host = ((a || '').split(/\s+/)[0] || 'dadesazan.team').replace(/[^a-zA-Z0-9.\-_]/g, '');
+    const lines = [
+      'Pinging ' + host + ' [93.184.2.16] with 32 bytes of data:',
+      'Reply from 93.184.2.16: bytes=32 time=' + (12 + (Math.random() * 30 | 0)) + 'ms TTL=118',
+      'Reply from 93.184.2.16: bytes=32 time=' + (12 + (Math.random() * 30 | 0)) + 'ms TTL=118',
+      'Reply from 93.184.2.16: bytes=32 time=' + (12 + (Math.random() * 30 | 0)) + 'ms TTL=118',
+      'Reply from 93.184.2.16: bytes=32 time=' + (12 + (Math.random() * 30 | 0)) + 'ms TTL=118',
+      '',
+      'Ping statistics for 93.184.2.16:',
+      '    Packets: Sent = 4, Received = 4, Lost = 0 (0% loss),',
+    ];
+    const cls = ['wh', 'ok', 'ok', 'ok', 'ok', '', 'sys', 'sys'];
+    termAnim(lines, cls, 420, () => tline('* شبیه‌سازی آموزشی — پینگ واقعی نیست.', 'dim'));
+  },
+  nmap(a){
+    const target = ((a || '').split(/\s+/)[0] || 'scanme.dadesazan.local').replace(/[^a-zA-Z0-9.\-_]/g, '');
+    const lines = [
+      'Starting Nmap 7.94 ( https://nmap.org ) | DADESAZAN sim',
+      'Scanning ' + target + ' (10.0.13.37) — 1000 ports',
+      'PORT      STATE     SERVICE',
+      '22/tcp    open      ssh',
+      '80/tcp    open      http',
+      '443/tcp   open      https',
+      '3306/tcp  closed    mysql',
+      '8080/tcp  filtered  http-proxy',
+      '1337/tcp  open      dz-chat',
+      'Nmap done: 1 IP address (1 host up) scanned in ' + (1.8 + Math.random()).toFixed(2) + ' seconds',
+    ];
+    const cls = ['sys', 'dim', 'cy', 'ok', 'ok', 'ok', 'warn', 'err', 'ok', 'gr'];
+    termAnim(lines, cls, 260, () => {
+      tline('* شبیه‌سازی آموزشی: nmap واقعی فقط روی سیستم خودت و فقط برای هدف‌هایی که اجازه داری!', 'warn');
+    });
+  },
+  tools(){
+    tline('ابزارهای نصب‌شده در ترمینال داده‌سازان (شبیه‌سازی‌شده):', 'ye');
+    tline('NAME         VERSION    STATUS   DESCRIPTION', 'cy');
+    for (const t of TERM_TOOLS){
+      tline(t.name.padEnd(13) + t.ver.padEnd(11) + '[ok]     ' + t.desc);
+    }
+    tline('* برای کار واقعی با این ابزارها، آن‌ها را روی سیستم خودت نصب کن و قانونی استفاده کن.', 'sys');
+  },
+  python(a){
+    const arg = String(a || '').trim();
+    if (arg && /^(--version|-V|-v)$/.test(arg)) return tlines(TERM_VERSION_MAP.python);
+    if (arg){
+      const cm = arg.match(/^-c\s+(.+)$/);
+      if (cm){
+        let code = cm[1].trim();
+        const q = code.match(/^"(.*)"$/) || code.match(/^'(.*)'$/);
+        if (q) code = q[1];
+        pyRunCode(code);
+        return;
+      }
+      if (/^-/.test(arg)) return tline('python: این گزینه پشتیبانی نمی‌شود. فقط: python  |  python hello.py  |  python -c "کد"', 'ye');
+      const fname = arg.split(/\s+/)[0];
+      if (/^[\w\-\.]+\.py$/i.test(fname)){
+        const node = termNodeAt(term.cwd);
+        const f = node && node.children && node.children[fname];
+        if (!f || f.type !== 'file') return tline("python: فایل '" + fname + "' در این پوشه پیدا نشد.", 'err');
+        return pyRunCode(String(f.body));
+      }
+    }
+    term.pyMode = true;
+    term.pyIdx = -1;
+    tline('Python 3.12.1 (DADESAZAN py-sim) on web', 'gr');
+    tline('راهنمای فارسی: help()   |   خروج: exit()   |   متغیرهای قبلی‌ات ذخیره شده‌اند.', 'sys');
+    refreshInPrompt();
+    try{ if (matchMedia('(hover: hover)').matches){ const inp = document.querySelector('#view-term .wt-input'); if (inp) inp.focus(); } }catch{}
+  },
+  pip(){
+    tline('pip در شبیه‌ساز لازم نیست؛ همه توابع پایه همین‌جا هستند :)', 'cy');
+    tline('پایتون را باز کن: python   →   بعد: help()', 'sys');
+  },
+  calc(a){
+    if (!a) return tline('استفاده: calc <عبارت ریاضی>   مثل: calc (2+3)*4', 'ye');
+    try{
+      tline('= ' + (Math.round(calcEval(a) * 1e10) / 1e10), 'gr');
+    }catch{ tline('calc: عبارت نامعتبر است؛ فقط اعداد و + - * / ( ) % مجاز است.', 'err'); }
+  },
+  theme(a){
+    if (!a){
+      tline('تم‌های موجود: ' + Object.keys(TERM_THEMES).join(' | '), 'cy');
+      return tline('استفاده: theme <نام تم>', 'sys');
+    }
+    const t2 = String(a).trim().toLowerCase();
+    if (!TERM_THEMES[t2]) return tline("theme: تم '" + t2 + "' وجود ندارد.", 'err');
+    term.theme = t2;
+    const winEl = document.querySelector('#view-term .wt');
+    if (winEl) winEl.style.setProperty('--wt-accent', TERM_THEMES[t2]);
+    termPrefsSave();
+    tline('تم ترمینال به ' + t2 + ' تغییر کرد. (مخصوص حساب تو ذخیره شد)', 'ok');
+  },
+  hostname(a){
+    if (!a) return tline('hostname فعلی: ' + term.host, 'cy');
+    const h = String(a).trim().toLowerCase();
+    if (!/^[a-z0-9_\-]{2,20}$/.test(h)) return tline('hostname: فقط حروف لاتین/عدد/خط تیره، بین ۲ تا ۲۰ کاراکتر.', 'err');
+    term.host = h;
+    term.cwd = ['C:', 'Users', h];
+    term.fs = termFS(h);
+    termPrefsSave();
+    refreshInPrompt();
+    tline('نام سیستم به ' + h + ' تغییر کرد. (پوشه شخصی تازه ساخته شد)', 'ok');
+  },
+  history(){
+    if (!term.hist.length) return tline('(تاریخچه خالی است)', 'dim');
+    term.hist.forEach((h, i) => tline(String(i + 1).padStart(3) + '  ' + h));
+  },
+  matrix(a){
+    const arg = String(a || '').trim().toLowerCase();
+    if (arg === 'on' || arg === '1' || arg === 'true'){
+      state.effects = true;
+      try{ localStorage.setItem('dadesazan_effects', '1'); }catch{}
+      matrix.start();
+      return tline('بارش ماتریکس پس‌زمینه روشن شد.', 'ok');
+    }
+    if (arg === 'off' || arg === '0' || arg === 'false'){
+      state.effects = false;
+      try{ localStorage.setItem('dadesazan_effects', '0'); }catch{}
+      matrix.stop();
+      return tline('بارش ماتریکس پس‌زمینه خاموش شد.', 'ok');
+    }
+    tline('بارش ماتریکس: ' + (state.effects ? 'روشن' : 'خاموش'), 'cy');
+    tline('استفاده: matrix on  یا  matrix off', 'sys');
+  },
+  ipconfig(){
+    tlines([
+      'Windows IP Configuration (simulated)',
+      '',
+      'Wireless LAN adapter Wi-Fi:',
+      '',
+      '   Connection-specific DNS Suffix  . : dadesazan',
+      '   IPv4 Address. . . . . . . . . . . : 10.0.13.37',
+      '   Subnet Mask . . . . . . . . . . . : 255.255.255.0',
+      '   Default Gateway . . . . . . . . . : 10.0.13.1',
+    ]);
+  },
+  banner(){
+    tlines([
+      '╔═══════════════════════════════════════╗',
+      '║   D A D E S A Z A N   T E A M         ║',
+      '║        dzsh terminal v' + TERM_VERSION + '         ║',
+      '╚═══════════════════════════════════════╝',
+    ], 'gr');
+  },
+  neofetch(){
+    const up = Math.max(0, Date.now() - TERM_UP0);
+    const mm = Math.floor(up / 60000), ss = Math.floor((up % 60000) / 1000);
+    const p = state.profile || {};
+    const logo = [
+      '   ▄▄████▄▄   ',
+      ' ██▀▀    ▀▀██ ',
+      ' ██   ▄▄   ██ ',
+      ' ██   ▀▀   ██ ',
+      ' ██▄▄    ▄▄██ ',
+      '   ▀▀████▀▀   ',
+    ];
+    const info = [
+      (term.host || 'user') + '@dadesazan',
+      '──────────────────────',
+      'OS:       DADESAZAN OS 2.0 (web)',
+      'Shell:    dzsh ' + TERM_VERSION,
+      'Terminal: DADESAZAN Terminal',
+      'Theme:    matrix-dark / ' + term.theme,
+      'Uptime:   ' + mm + 'm ' + ss + 's',
+      'User:     ' + (p.username || 'user') + (p.role === 'admin' ? ' (admin)' : ''),
+      'Status:   ' + (STATUS_LABEL[p.membership_status] || STATUS_LABEL.none).text,
+      'Score:    ' + (p.score == null ? '0' : p.score) + ' pts',
+      'Tools:    ' + TERM_TOOLS.length + ' installed (sim)',
+    ];
+    const rows = Math.max(logo.length, info.length);
+    for (let i = 0; i < rows; i++){
+      tline((logo[i] || ' '.repeat(14)) + '  ' + (info[i] || ''), i < 2 ? 'gr' : '');
+    }
+  },
+  ver(){
+    tline('DADESAZAN Terminal [Version ' + TERM_VERSION + ']');
+    tline('(c) تیم داده‌سازان. تمام حقوق محفوظ است.', 'dim');
+  },
+  sudo(){
+    tline(term.host + ' is not in the sudoers file. This incident will be reported.', 'err');
+    tline('(شوخی کردم! این ترمینال شبیه‌سازی است و هیچ چیز گزارش نمی‌شود :)', 'sys');
+  },
+  exit(){ tline('برای خروج واقعی از حساب، از دکمه خروج در پایین سایدبار استفاده کن.', 'ye'); },
+  about(){
+    tlines([
+      'DADESAZAN Terminal — ترمینال اختصاصی اعضای تیم داده‌سازان',
+      'نسخه ' + TERM_VERSION + ' | پوسته dzsh | پایتون تعاملی py-sim',
+      'این ترمینال یک شبیه‌ساز آموزشی است که کاملاً در مرورگر خودت اجرا می‌شود؛',
+      'هیچ دستوری روی سرور یا سیستم دیگران اجرا نمی‌شود.',
+      'تنظیمات (theme/hostname)، تاریخچه دستورها و متغیرهای پایتون‌ات',
+      'همگی مخصوص حساب تو ذخیره می‌شوند.',
+      'ابزارهای نمایش‌داده‌شده فقط برای حس و یادگیری هستند؛ نسخه واقعی‌شان را',
+      'روی سیستم خودت نصب کن و همیشه قانونی و با اجازه استفاده کن.',
+    ]);
+  },
+};
 
 /* ============================================================================
    پوسته و راه‌اندازی
