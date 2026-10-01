@@ -1416,14 +1416,8 @@ b, strong{ font-weight: 700; }
 
     <!-- هشدار راه‌اندازی دیتابیس — فقط وقتی جداول هنوز ساخته نشده‌اند نمایش داده می‌شود -->
     <div id="auth-setup-alert" class="setup-alert" hidden role="alert">
-      <strong>پایگاه داده هنوز راه‌اندازی نشده است</strong>
-      <p>ثبت‌نام شما در سیستم احراز هویت انجام شده، اما جداول تیم هنوز ساخته نشده‌اند. فقط یک بار این مراحل را انجام دهید:</p>
-      <ol>
-        <li>وارد <b>supabase.com/dashboard</b> شوید و پروژه خود را باز کنید.</li>
-        <li>از منوی سمت چپ: <b>SQL Editor</b> → دکمه <b>New query</b>.</li>
-        <li>کل محتوای فایل <b>setup.sql</b> (داخل پوشه supabase) را Paste و دکمه <b>Run</b> را بزنید.</li>
-        <li>به همین صفحه برگردید، صفحه را <b>رفرش</b> کنید و با همان ایمیل و رمز، وارد شوید.</li>
-      </ol>
+      <strong>سیستم در حال راه‌اندازی است</strong>
+      <p>ثبت‌نام شما دریافت شد اما حساب شما هنوز فعال نشده است؛ به‌زودی دوباره وارد شوید. اگر مشکل ادامه داشت، به مدیر تیم اطلاع بدهید.</p>
     </div>
 
     <div class="auth-tabs" role="tablist" aria-label="ورود یا ثبت‌نام">
@@ -1452,16 +1446,8 @@ b, strong{ font-weight: 700; }
       <button type="button" class="btn btn-ghost btn-block" id="li-google">ورود و ثبت‌نام با گوگل</button>
       <p class="oauth-note" id="li-google-note" role="status" hidden></p>
       <details id="li-forgot" class="forgot-box">
-        <summary>رمز را فراموش کرده‌اید یا پیام «ایمیل قبلاً ثبت شده» می‌بینید؟</summary>
-        <p>این یعنی ایمیل شما در سیستم ثبت شده اما رمزش را نمی‌دانید. هیچ ایمیلی ارسال نمی‌شود؛ چون مالک پروژه خودتان هستید، با یکی از دو روش زیر در کمتر از یک دقیقه رمز جدید بسازید:</p>
-        <p><b>روش ۱ — داشبورد:</b> <span class="ci">supabase.com/dashboard</span> → پروژه‌تان → <b>Authentication → Users</b> → روی ایمیل خود کلیک کنید → <b>Generate new password</b> → رمز جدید را کپی و با همان وارد شوید.</p>
-        <p><b>روش ۲ — SQL Editor (مطمئن‌ترین):</b> داشبورد → <b>SQL Editor → New query</b> → کد زیر را اجرا کنید؛ فقط <span class="ci">RAMZ_JADID</span> را رمز دلخواه خودتان و ایمیل را ایمیل خودتان کنید:</p>
-        <pre>create extension if not exists pgcrypto;
-update auth.users
-set encrypted_password =
-  crypt('RAMZ_JADID', gen_salt('bf'))
-where email = 'YOU@example.com';</pre>
-        <p>سپس صفحه را رفرش کنید و با ایمیل + رمز جدید وارد شوید. اگر ترجیح می‌دهید از صفر ثبت‌نام کنید، به‌جای دو دستور بالا این یک خط را اجرا کنید تا حساب قبلی پاک شود: <span class="ci">delete from auth.users where email = 'YOU@example.com';</span></p>
+        <summary>رمز عبورتان را فراموش کرده‌اید؟</summary>
+        <p>مشکلی نیست! فقط کافی است به مدیر تیم پیام بدهید تا رمز عبورتان را بازنشانی کند و رمز جدید را برایتان قرار دهد. به‌زودی دوباره می‌توانید وارد شوید و به تیم بپیوندید.</p>
       </details>
       <p class="auth-hint">حساب ندارید؟ از تب «ثبت‌نام» شروع کنید.</p>
     </form>
@@ -1849,11 +1835,11 @@ function mapError(err){
   if (PERSIAN_RE.test(m)) return tag(m);
   if (s.includes('could not find the function') || s.includes('pgrst202') || s.includes('42883')
       || (s.includes('function') && s.includes('does not exist')))
-    return tag('این قابلیت هنوز در دیتابیس نصب نشده است؛ فایل setup.sql جدید را در SQL Editor داشبورد اجرا کنید، بعد صفحه را رفرش کنید.');
+    return tag('این قابلیت به‌زودی فعال می‌شود؛ لطفاً چند دقیقه بعد دوباره امتحان کنید.');
   if (s.includes('23502') || s.includes('not-null constraint'))
-    return tag('یک فیلد اجباری دیتابیس خالی مانده است؛ معمولاً با اجرای مجدد setup.sql (نسخه جدید) رفع می‌شود.');
+    return tag('خطایی در پردازش درخواست رخ داد؛ لطفاً دوباره تلاش کنید. اگر تکرار شد، به مدیر تیم اطلاع بدهید.');
   if (s.includes('23514') || s.includes('check constraint'))
-    return tag('مقدار ارسالی با محدودیت‌های دیتابیس سازگار نیست؛ معمولاً با اجرای مجدد setup.sql (نسخه جدید) رفع می‌شود.');
+    return tag('اطلاعات ارسالی معتبر نیست؛ لطفاً مقادیر را بررسی و دوباره تلاش کنید.');
   if (s.includes('invalid login credentials')) return tag('ایمیل یا رمز عبور اشتباه است. اگر رمز را فراموش کرده‌اید، راهنمای «فراموشی رمز» زیر فرم ورود را باز کنید.');
   if (s.includes('email not confirmed'))       return tag('ایمیل شما هنوز تأیید نشده است؛ لطفاً صندوق ایمیل خود را بررسی کنید.');
   if (s.includes('already registered') || s.includes('already exists')) return tag('این ایمیل قبلاً در تیم داده‌سازان ثبت شده است. اگر رمز آن را نمی‌دانید، به تب «ورود» بروید و راهنمای «فراموشی رمز» را باز کنید.');
@@ -1867,8 +1853,8 @@ function mapError(err){
   if (s.includes('jwt') || s.includes('token') || s.includes('401')) return tag('نشست شما منقضی شده است؛ لطفاً دوباره وارد شوید.');
   if (s.includes('user from sub claim')) return tag('نشست شما معتبر نیست؛ لطفاً دوباره وارد شوید.');
   if (s.includes('pgrst204') || (s.includes('column') && s.includes('could not find')))
-    return tag('ساختار دیتابیس قدیمی است؛ فایل setup.sql جدید را در SQL Editor داشبورد اجرا کنید و صفحه را رفرش کنید.');
-  if (s.includes('could not find the table') || s.includes('pgrst205')) return tag('جداول تیم هنوز ساخته نشده‌اند؛ لطفاً فایل setup.sql را در SQL Editor پروژه Supabase اجرا کنید.');
+    return tag('سیستم موقتاً در دسترس نیست؛ لطفاً چند دقیقه بعد دوباره تلاش کنید.');
+  if (s.includes('could not find the table') || s.includes('pgrst205')) return tag('سیستم در حال راه‌اندازی است؛ لطفاً کمی بعد دوباره سر بزنید.');
   // خطای ناشناخته: با کد نمایش داده می‌شود تا قابل گزارش و ردیابی باشد
   if (code) return tag('خطایی رخ داد؛ لطفاً این کد را برای پیگیری گزارش کنید.');
   // بدون کد: تکه کوتاهی از متن خام خطا برای گزارش نشان داده می‌شود
@@ -2502,7 +2488,7 @@ function setFormError(id, msg){
   box.hidden = !msg;
   box.textContent = msg || '';
 }
-function showAuthScreen(notice){
+function showAuthScreen(notice, setup){
   $('#app').hidden = true;
   $('#auth').hidden = false;
   // پیام باید روی تبِ «فعال» نمایش داده شود، نه تب مخفی
@@ -2510,9 +2496,9 @@ function showAuthScreen(notice){
   const msg = notice || '';
   setFormError('#li-form-error', onReg ? '' : msg);
   setFormError('#rg-form-error', onReg ? msg : '');
-  // اگر مشکل «ساخته نشدن جداول» است، پنل راهنمای نصب دیتابیس را هم نمایش بده
+  // پنل وضعیت راه‌اندازی فقط با فلگ صریح (بر اساس کد خطای خام — نه متن کاربرپسند) نمایش داده می‌شود
   const setupBox = $('#auth-setup-alert');
-  if (setupBox) setupBox.hidden = !(/setup\.sql|جداول/.test(msg));
+  if (setupBox) setupBox.hidden = !setup;
 }
 
 function bindAuthUI(){
@@ -2681,7 +2667,7 @@ function bindAuthUI(){
         if (!cfg || !cfg.external || !cfg.external.google){
           if (note){
             note.hidden = false;
-            note.textContent = 'ورود با گوگل هنوز فعال نشده است. فعال‌سازی ۴ قدمی (یک‌بار، حدود ۵ دقیقه): (۱) در console.cloud.google.com یک پروژه بسازید → «APIs & Services» → «OAuth consent screen» → نوع External → نام برنامه و ایمیل را وارد و ذخیره کنید. (۲) «Credentials» → «Create Credentials» → «OAuth client ID» → نوع Web application → در «Authorized redirect URIs» این آدرس را اضافه کنید: https://wsittcfkjedtuthshcvt.supabase.co/auth/v1/callback (۳) داشبورد Supabase → Authentication → Sign In / Providers → Google را Enable کنید و Client ID و Client Secret گوگل را وارد و Save بزنید. (۴) در همان صفحه بخش «Redirect URLs» آدرس سایت خود را اضافه کنید؛ و در کنسول گوگل دکمه «Publish App» را بزنید تا برای همه کاربران باز شود (در حالت Testing فقط کاربران تستی می‌توانند وارد شوند).';
+            note.textContent = 'ورود با گوگل به‌زودی فعال می‌شود. فعلاً با ایمیل و رمز عبور وارد شوید یا از تب «ثبت‌نام» حساب جدید بسازید.';
           }
           return;
         }
@@ -2750,7 +2736,7 @@ function bindAuthUI(){
           const fb = $('#li-forgot');
           if (fb) fb.open = true;
           setFormError('#rg-form-error', '');
-          setFormError('#li-form-error', 'این ایمیل قبلاً ثبت شده است. اگر رمز آن را نمی‌دانید، راهنمای «فراموشی رمز» برایتان باز شد؛ با یکی از دو روش رمز جدید بسازید و وارد شوید.');
+          setFormError('#li-form-error', 'این ایمیل قبلاً ثبت شده است. اگر رمز آن را نمی‌دانید، راهنمای «فراموشی رمز» برایتان باز شد؛ کافی است به مدیر تیم پیام بدهید تا رمز را برایتان بازنشانی کند.');
         }
         return;
       }
@@ -2761,7 +2747,7 @@ function bindAuthUI(){
         // تأیید ایمیل در پروژه روشن است — هیچ صفحه کد/OTP نداریم؛ فقط راهنمای خاموش‌کردن آن برای مدیر
         showAuthScreen();
         switchTab(false);
-        setFormError('#li-form-error', 'ثبت‌نام انجام شد اما ورود خودکار مسدود است، چون گزینه «Confirm email» در داشبورد Supabase روشن است. مدیر باید: Authentication → Sign In / Providers → Email → گزینه Confirm email را خاموش و Save کند؛ سپس دوباره وارد شوید.');
+        setFormError('#li-form-error', 'ثبت‌نام شما انجام شد! فعال‌سازی کامل حساب ممکن است چند دقیقه طول بکشد؛ کمی بعد دوباره وارد شوید. اگر مشکل ادامه داشت، به مدیر تیم اطلاع بدهید.');
       }
     }catch(err){
       setFormError('#rg-form-error', mapError(err));
@@ -2781,11 +2767,14 @@ async function enterWithSession(session){
     const { data, error } = await state.client
       .from('profiles').select('*').eq('id', session.user.id).maybeSingle();
     if (error){
-      showAuthScreen('خطا در بارگذاری پروفایل: ' + mapError(error));
+      // تشخیص «دیتابیس راه‌اندازی نشده» از روی کد/پیام خام خطا (نه متن نمایشی) — برای پنل وضعیت راه‌اندازی
+      const rawErr = String(error?.message || error?.error_description || '') + ' ' + String(error?.code || '');
+      const isSetupErr = /pgrst205|pgrst202|pgrst204|42883|could not find the table|could not find the function/i.test(rawErr);
+      showAuthScreen('خطا در بارگذاری پروفایل: ' + mapError(error), isSetupErr);
       return;
     }
     if (!data){
-      showAuthScreen('حساب شما در سیستم احراز هویت ثبت شده، اما پروفایل تیمی شما هنوز ساخته نشده است. مدیر باید یک بار فایل setup.sql را در SQL Editor داشبورد Supabase اجرا کند (پروفایل حساب‌هایی که قبلاً ثبت‌نام کرده‌اند خودکار ساخته می‌شود) و سپس دوباره وارد شود.');
+      showAuthScreen('حساب شما در سیستم پیدا شد اما پروفایل تیمی‌تان هنوز کامل نشده است؛ لطفاً چند دقیقه بعد دوباره وارد شوید. اگر مشکل ادامه داشت، به مدیر تیم اطلاع بدهید.');
       await state.client.auth.signOut({ scope: 'local' });
       return;
     }
@@ -3024,12 +3013,6 @@ function showGateScreen(p){
     title.textContent = 'درخواست عضویت شما ثبت شد و در انتظار تأیید مدیر است.';
     body.append(
       el('p', { class: 'gate-note', text: 'ثبت‌نام شما کامل شد و درخواست عضویت‌تان به مدیر تیم رسید. به‌محض تأیید، به‌صورت خودکار وارد سایت می‌شوید؛ چت، لیدربورد و همه امکانات برای شما باز خواهد شد.' }),
-      el('details', { class: 'forgot-box' },
-        el('summary', { text: 'شما مدیر/مالک پروژه Supabase هستید؟ اولین مدیر باید یک‌بار ساخته شود' }),
-        el('p', { text: 'تأیید درخواست‌ها فقط توسط «مدیر» انجام می‌شود و اولین مدیر هیچ‌کس نیست جز خود مالک پروژه. در داشبورد Supabase → SQL Editor → New query، این خط را با ایمیل خودتان اجرا کنید (هیچ ایمیلی رد و بدل نمی‌شود):' }),
-        el('pre', { text: "select public.promote_to_admin('YOUR_EMAIL@example.com');" }),
-        el('p', { text: 'بعد در همین صفحه دکمه «بررسی وضعیت الآن» را بزنید — بلافاصله مدیر و عضو تأییدشده می‌شوید و منوی «مدیریت سایت» ظاهر می‌شود.' })
-      ),
       el('div', { class: 'gate-actions' },
         el('button', { class: 'btn btn-primary', type: 'button', text: 'بررسی وضعیت الآن', onclick: async (e) => {
           const b = e.currentTarget;
@@ -3049,15 +3032,6 @@ function showGateScreen(p){
     icon.innerHTML = iconSvg('close');
     title.textContent = 'درخواست عضویت شما بررسی شد و متأسفانه پذیرفته نشد.';
     body.append(el('p', { class: 'gate-reason', text: p.ban_reason ? ('دلیل: ' + p.ban_reason) : 'دلیلی برای رد درخواست ثبت نشده است.' }));
-    if (p.role === 'admin'){
-      // بازیابی مدیر: اگر وضعیت عضویت مدیر به‌هر دلیل rejected شده باشد
-      body.append(el('details', { class: 'forgot-box' },
-        el('summary', { text: 'شما مدیر هستید و دسترسی‌تان مختل شده؟ یک خط SQL دسترسی‌تان را برمی‌گرداند' }),
-        el('p', { text: 'در داشبورد Supabase → SQL Editor → New query، این خط را با ایمیل خودتان اجرا کنید تا هم‌زمان مدیر و عضو تأییدشده شوید:' }),
-        el('pre', { text: "select public.promote_to_admin('YOUR_EMAIL@example.com');" }),
-        el('p', { text: 'سپس در همین صفحه دکمه «بررسی وضعیت الآن» را بزنید یا صفحه را رفرش کنید.' })
-      ));
-    }
     (async () => {
       const lastReq = await state.client
         .from('membership_requests').select('*').eq('user_id', p.id)
