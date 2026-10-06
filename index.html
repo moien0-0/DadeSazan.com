@@ -864,6 +864,70 @@ b, strong{ font-weight: 700; }
 .chat-locked svg{ width: 46px; height: 46px; color: var(--amber); }
 .chat-locked p{ margin: 0; color: var(--text-2); max-width: 420px; }
 
+/* ————— هوش مصنوعی (AI CORE) ————— */
+.ai-core-en{ font-family: var(--mono); font-size: 10.5px; color: var(--muted); letter-spacing: 2.5px; font-weight: 400; }
+.ai-head-actions{ display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ai-quota{
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  padding: 9px 16px; border-bottom: 1px solid var(--green-border);
+  background: rgba(0,255,65,.03); font-size: 12px; color: var(--text-2);
+}
+.ai-quota b{ color: var(--green-2); font-family: var(--mono); font-weight: 700; }
+.ai-quota .ai-qbar{ flex: 1; min-width: 110px; height: 5px; border-radius: 99px; background: rgba(0,255,65,.12); overflow: hidden; }
+.ai-quota .ai-qbar i{ display: block; height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--green-dim), var(--green)); box-shadow: 0 0 10px var(--green-glow); transition: width .4s ease; }
+.ai-quota .ai-qreset{ font-family: var(--mono); direction: ltr; }
+.ai-quota .ai-qreset.warn{ color: var(--amber); }
+.ai-av{
+  flex: none; width: 36px; height: 36px; border-radius: 10px;
+  display: grid; place-items: center;
+  background: rgba(0,255,65,.06); border: 1px solid var(--green-border);
+  color: var(--green); box-shadow: 0 0 12px rgba(0,255,65,.15);
+}
+.ai-av svg{ width: 19px; height: 19px; }
+.ai-msg{ max-width: min(80%, 580px); display: flex; gap: 8px; align-items: flex-end; animation: msgin .3s cubic-bezier(.2,.9,.3,1) both; }
+.ai-msg .m-body{ display: grid; gap: 3px; min-width: 0; flex: 1; }
+.ai-msg.user{ align-self: flex-end; flex-direction: row-reverse; }
+.ai-msg.bot{ align-self: flex-start; }
+.ai-msg .m-bubble{
+  background: rgba(0,20,9,.72); border: 1px solid rgba(0,255,65,.2);
+  border-radius: 4px 13px 13px 13px; padding: 9px 13px;
+  font-size: 14px; line-height: 2; color: var(--text);
+  overflow-wrap: anywhere; word-break: break-word;
+  box-shadow: 0 2px 10px rgba(0,0,0,.35);
+  white-space: pre-wrap;
+}
+.ai-msg .m-bubble a{ color: var(--green-2); word-break: break-all; }
+.ai-msg.user .m-bubble{
+  background: linear-gradient(180deg, rgba(0,45,17,.8), rgba(0,30,12,.8));
+  border-color: rgba(0,255,65,.4); border-radius: 13px 4px 13px 13px;
+  box-shadow: 0 0 14px rgba(0,255,65,.08);
+}
+.ai-msg .m-time{ display: block; margin-top: 4px; font-size: 10.5px; color: var(--muted); }
+.ai-msg.error .m-bubble{ border-color: var(--red-border); background: rgba(30,4,4,.5); color: var(--red-2); }
+.ai-msg.error .ai-av{ color: var(--red-2); border-color: var(--red-border); background: var(--red-soft); box-shadow: none; }
+.ai-typing{ display: inline-flex; gap: 4px; align-items: center; padding: 5px 3px; }
+.ai-typing i{ width: 6px; height: 6px; border-radius: 99px; background: var(--green); opacity: .35; animation: aitblink 1.1s infinite; }
+.ai-typing i:nth-child(2){ animation-delay: .18s; }
+.ai-typing i:nth-child(3){ animation-delay: .36s; }
+@keyframes aitblink{ 0%,100%{ opacity: .25; transform: translateY(0); } 50%{ opacity: 1; transform: translateY(-3px); } }
+.ai-suggest{ display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; }
+.ai-suggest button{
+  font-family: var(--sans); font-size: 12px; color: var(--text-2);
+  background: rgba(0,255,65,.05); border: 1px solid var(--green-border);
+  border-radius: 99px; padding: 5px 12px; cursor: pointer;
+  transition: border-color .15s, color .15s, transform .15s;
+}
+.ai-suggest button:hover{ border-color: var(--green); color: var(--green-2); transform: translateY(-2px); }
+.ai-suggest button:focus-visible{ outline: 2px dashed var(--green); outline-offset: 2px; }
+@media (max-width: 640px){
+  .ai-msg{ max-width: 90%; }
+  .ai-quota{ padding: 8px 12px; font-size: 11.5px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .ai-msg{ animation: none; }
+  .ai-typing i{ animation: none; opacity: .6; }
+}
+
 /* ================= لیدربورد ================= */
 .podium{ display: grid; grid-template-columns: repeat(3, 1fr); gap: 11px; margin-bottom: 16px; align-items: end; }
 .pod{
@@ -1633,6 +1697,7 @@ b, strong{ font-weight: 700; }
       <section id="view-chat" class="view" hidden aria-label="چت تیم"></section>
       <section id="view-term" class="view" hidden aria-label="ترمینال اختصاصی"></section>
       <section id="view-leader" class="view" hidden aria-label="لیدربورد"></section>
+      <section id="view-ai" class="view" hidden aria-label="هوش مصنوعی"></section>
       <section id="view-membership" class="view" hidden aria-label="وضعیت عضویت"></section>
       <section id="view-settings" class="view" hidden aria-label="تنظیمات"></section>
       <section id="view-admin" class="view" hidden aria-label="مدیریت سایت"></section>
@@ -1701,8 +1766,9 @@ const state = {
   avatarsOk: false,
   avatarsTried: 0,
   effects: (localStorage.getItem('dadesazan_effects') ?? '1') === '1',
-  settings: { chat_cooldown_s: 1, chat_max_len: 1000, chat_enabled: true, reg_enabled: true },
+  settings: { chat_cooldown_s: 1, chat_max_len: 1000, chat_enabled: true, reg_enabled: true, ai_daily_limit: 30, ai_admin_counts: false },
   ownedItems: null, // Set از شناسه آیتم‌های ویژه‌ای که کاربر دارد (هدیه مدیر/خرید)
+  ai: null,         // وضعیت سهمیه/دسترسی هوش مصنوعی (مرجع نمایشی؛ اجرا سمت سرور است)
 };
 
 /* لوگوی رسمی تیم (درون‌خطی و سازگار با CSP — بدون فایل جانبی) */
@@ -1746,6 +1812,7 @@ const ICONS = {
   volume:  I('<path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M18.5 5.5a9 9 0 0 1 0 13"/>'),
   arrow:   I('<path d="M19 12H5"/><path d="M11 18l-6-6 6-6"/><path d="M13 6l-6 6 6 6" opacity="0"/>'),
   term:    I('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3"/><path d="M13 15h4"/>'),
+  ai:      I('<rect x="7" y="7" width="10" height="10" rx="2.5"/><path d="M12 10.2v3.6M10.2 12h3.6"/><path d="M9.5 7V4.5M14.5 7V4.5M9.5 19.5V17M14.5 19.5V17M7 9.5H4.5M7 14.5H4.5M19.5 9.5H17M19.5 14.5H17"/>'),
 };
 const iconSvg = (name) => ICONS[name] || ICONS.shield;
 
@@ -2893,7 +2960,10 @@ const NAV = [
   { id: 'chat',       label: 'چت',             icon: 'chat',   auth: true },
   { id: 'term',       label: 'ترمینال',        icon: 'term',   auth: true },
   { id: 'leader',     label: 'برترین‌ها',      icon: 'trophy', auth: true },
-  { id: 'membership', label: 'وضعیت عضویت',    icon: 'shield', auth: true },
+  { id: 'ai',         label: 'هوش مصنوعی',     icon: 'ai',     auth: true },
+  /* وضعیت عضویت از سایدبار حذف شد و جای خود را به «هوش مصنوعی» داد؛
+     خود نما و جریان عضویت دست‌نخورده ماند (از کاشی خانه در دسترس است) */
+  { id: 'membership', label: 'وضعیت عضویت',    icon: 'shield', auth: true, hidden: true },
   { id: 'settings',   label: 'تنظیمات',        icon: 'gear',   auth: true },
   { id: 'admin',      label: 'مدیریت سایت',    icon: 'crown',  auth: true, admin: true },
 ];
@@ -2904,6 +2974,7 @@ function buildNav(){
   nav.replaceChildren();
   for (const item of NAV){
     if (item.auth && !state.profile) continue;
+    if (item.hidden) continue; // نماهای داخلی (مثل وضعیت عضویت) از سایدبار حذف می‌شوند
     if (item.admin && !isAdmin()) continue;
     if (item.admin) nav.append(el('div', { class: 'nav-sep' }));
     nav.append(el('button', {
@@ -2966,6 +3037,7 @@ function renderView(name){
     case 'chat':       renderChat(); break;
     case 'term':       renderTerm(); break;
     case 'leader':     renderLeader(); break;
+    case 'ai':         renderAI(); break;
     case 'membership': renderMembership(); break;
     case 'settings':   renderSettings(); break;
     case 'admin':      renderAdmin(); break;
@@ -3017,6 +3089,8 @@ async function loadSiteSettings(){
     if (Number.isFinite(Number(s.chat_max_len))) state.settings.chat_max_len = Math.max(50, Math.min(1000, Number(s.chat_max_len)));
     if (typeof s.chat_enabled === 'boolean') state.settings.chat_enabled = s.chat_enabled;
     if (typeof s.reg_enabled === 'boolean') state.settings.reg_enabled = s.reg_enabled;
+    if (Number.isFinite(Number(s.ai_daily_limit))) state.settings.ai_daily_limit = Math.max(1, Math.min(500, Number(s.ai_daily_limit)));
+    if (typeof s.ai_admin_counts === 'boolean') state.settings.ai_admin_counts = s.ai_admin_counts;
   }catch{}
 }
 
@@ -3180,6 +3254,7 @@ function renderHome(){
     { id: 'me',         icon: 'user',   title: 'من',            desc: 'پروفایل، اطلاعات حساب و وضعیت شما در تیم' },
     { id: 'chat',       icon: 'chat',   title: 'چت تیم',        desc: 'گفت‌وگوی زنده اعضا با حضور آنلاین' },
     { id: 'term',       icon: 'term',   title: 'ترمینال من',     desc: 'ترمینال اختصاصی خودت با nmap، پایتون و ابزارهای بیشتر' },
+    { id: 'ai',         icon: 'ai',     title: 'هوش مصنوعی',     desc: 'دستیار هوشمند تیم با سهمیه روزانه' },
     { id: 'leader',     icon: 'trophy', title: 'برترین‌ها',      desc: 'جدول امتیازات و رتبه‌بندی اعضای تیم' },
     { id: 'membership', icon: 'shield', title: 'وضعیت عضویت',   desc: 'ارسال درخواست عضویت و پیگیری وضعیت آن' },
   ];
@@ -4412,6 +4487,364 @@ function openMuteModal(userId, username){
 }
 
 /* ============================================================================
+   نمای هوش مصنوعی (AI CORE) — دستیار تیم با سهمیه روزانه سمت سرور
+   مرورگر فقط تابع Edge «ai-chat» را صدا می‌زند؛ کلید OpenRouter هرگز به فرانت نمی‌آید.
+   سهمیه/دسترسی همیشه سمت دیتابیس کنترل می‌شود؛ مقادیر این‌جا فقط «نمایشی» هستند.
+   ============================================================================ */
+const AI_MAX_LEN = 2000; // هم‌راستا با محدودیت تابع Edge
+const AI_EMPTY_SUGGESTS = [
+  'سلام! خودت را معرفی کن',
+  'یک نکته امنیتی جالب بگو',
+  'پایتون: تفاوت list و tuple؟',
+  'SQL چیست و به چه دردی می‌خورد؟',
+];
+const AI_ERROR_FA = {
+  quota: 'سهمیه روزانه هوش مصنوعی شما تمام شده است.',
+  blocked: 'دسترسی هوش مصنوعی برای این حساب فعال نیست.',
+  cooldown: 'کمی آهسته‌تر! چند لحظه بعد دوباره تلاش کنید.',
+  auth: 'نشست شما معتبر نیست؛ لطفاً دوباره وارد شوید.',
+  membership: 'برای استفاده از هوش مصنوعی، عضویت شما باید تأیید شده باشد.',
+  prompt_invalid: 'متن پیام معتبر نیست؛ لطفاً پرسش خود را بنویسید.',
+  prompt_too_long: 'پیام شما بیش از حد طولانی است (حداکثر ۲۰۰۰ کاراکتر).',
+  rate_limit: 'سرور هوش مصنوعی شلوغ است؛ چند لحظه بعد دوباره تلاش کنید.',
+  upstream: 'هوش مصنوعی موقتاً در دسترس نیست؛ لطفاً چند لحظه بعد دوباره امتحان کنید.',
+  timeout: 'پاسخ هوش مصنوعی دیر رسید؛ لطفاً دوباره تلاش کنید.',
+  network: 'خطا در ارتباط با سرور؛ اتصال اینترنت را بررسی کنید.',
+  server: 'خطایی رخ داد؛ لطفاً چند لحظه بعد دوباره تلاش کنید.',
+};
+let aiBusy = false;        // گارد ضد ارسال تکراری (همراه با disable دکمه)
+let aiQuotaBusy = false;   // گارد پرس‌وجوی هم‌زمان سهمیه
+let aiServerSkew = 0;      // اختلاف ساعت سرور با مرورگر (ms) — برای شمارش معکوس دقیق
+const aiServerNow = () => Date.now() + aiServerSkew;
+function aiFmtCountdown(ms){
+  const s = Math.max(0, Math.floor(ms / 1000));
+  const p = (n) => String(n).padStart(2, '0');
+  return toFa(p(Math.floor(s / 3600)) + ':' + p(Math.floor((s % 3600) / 60)) + ':' + p(s % 60));
+}
+
+async function renderAI(){
+  const sec = $('#view-ai');
+  aiBusy = false;
+  if (!isMember()){
+    sec.replaceChildren(el('section', { class: 'card chat-locked' },
+      el('span', { html: iconSvg('ai') }),
+      el('h2', { class: 'view-title', style: 'justify-content:center' }, 'هوش مصنوعی'),
+      el('p', { text: 'دستیار هوشمند تیم فقط برای اعضای تأییدشده فعال می‌شود. وضعیت عضویت خود را از کاشی «وضعیت عضویت» در صفحه خانه پیگیری کنید.' })
+    ));
+    return;
+  }
+
+  /* وضعیت سهمیه — مقدار اولیه نمایشی؛ بلافاصله از سرور تازه‌سازی می‌شود */
+  state.ai = {
+    auth: true, enabled: true, loaded: false,
+    used: null, limit: state.settings.ai_daily_limit || 30, remaining: null,
+    window_started_at: null, resets_at: null,
+    unlimited: isAdmin() && !state.settings.ai_admin_counts,
+  };
+
+  const quotaPill = el('span', { class: 'online-pill', id: 'ai-quota-pill' });
+  const refreshBtn = el('button', { class: 'icon-btn', type: 'button', 'aria-label': 'به‌روزرسانی سهمیه', title: 'به‌روزرسانی سهمیه', html: iconSvg('refresh') });
+  const clearBtn = el('button', { class: 'icon-btn', type: 'button', 'aria-label': 'پاک کردن گفتگو', title: 'پاک کردن گفتگو', html: iconSvg('trash') });
+  const head = el('div', { class: 'chat-head' },
+    el('div', { class: 'ch-title' },
+      el('span', { html: iconSvg('ai') }),
+      'هوش مصنوعی',
+      el('span', { class: 'ai-core-en', text: 'AI CORE' })),
+    el('div', { class: 'ai-head-actions' }, quotaPill, refreshBtn, clearBtn)
+  );
+  const quotaBar = el('div', { class: 'ai-quota', id: 'ai-quota-bar' });
+  const banner = el('div', { class: 'chat-alert', id: 'ai-banner', hidden: true });
+  const listBox = el('div', { class: 'chat-messages', id: 'ai-messages', role: 'log', 'aria-live': 'polite' });
+
+  const maxLen = AI_MAX_LEN;
+  const ta = el('textarea', { id: 'ai-input', maxlength: String(maxLen), placeholder: 'از دستیار هوش مصنوعی بپرس...', 'aria-label': 'متن پرسش', rows: '1' });
+  const counter = el('span', { class: 'char-count', text: '0/' + maxLen });
+  const sendBtn = el('button', { class: 'btn send-btn', type: 'submit', 'aria-label': 'ارسال پرسش', html: iconSvg('send') });
+  ta.addEventListener('input', () => {
+    counter.textContent = ta.value.length + '/' + maxLen;
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(110, ta.scrollHeight) + 'px';
+  });
+  ta.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey && window.innerWidth >= 1024){ e.preventDefault(); ta.form.requestSubmit(); }
+  });
+  const composer = el('form', { class: 'chat-composer', id: 'ai-form' },
+    el('div', { style: 'flex:1;display:grid;gap:4px' }, ta, el('div', { style: 'display:flex;justify-content:flex-end' }, counter)),
+    sendBtn
+  );
+  composer.addEventListener('submit', (e) => { e.preventDefault(); sendAIMessage({ ta, sendBtn, listBox }); });
+
+  sec.replaceChildren(el('div', { class: 'card chat-wrap' }, head, quotaBar, banner, listBox, composer));
+
+  refreshBtn.addEventListener('click', () => refreshAIQuota({ silent: true }));
+  clearBtn.addEventListener('click', () => confirmClearAI(listBox));
+
+  listBox.replaceChildren(aiEmptyNode());
+  renderAIQuotaUI();
+
+  /* شمارش معکوس تمدید سهمیه — هر ثانیه؛ در صفر شدن، وضعیت از سرور تازه‌سازی می‌شود */
+  const tick = setInterval(() => {
+    const bar = $('#ai-quota-bar');
+    const q = state.ai;
+    if (!bar || !q || !q.loaded || q.unlimited || q.unavailable || q.enabled === false) return;
+    const elR = bar.querySelector('.ai-qreset');
+    if (!elR || !q.resets_at) return;
+    const ms = new Date(q.resets_at).getTime() - aiServerNow();
+    if (ms <= 0){
+      if (!aiQuotaBusy) refreshAIQuota({ silent: true });
+      return;
+    }
+    elR.textContent = 'تمدید سهمیه: ' + aiFmtCountdown(ms);
+    elR.classList.toggle('warn', ms < 60 * 60 * 1000);
+  }, 1000);
+  state.viewTimers.push(tick);
+
+  await Promise.all([refreshAIQuota({ silent: true }), loadAIHistory(listBox)]);
+  updateAIComposerState();
+  try{ ta.focus(); }catch{}
+}
+
+function aiEmptyNode(){
+  return el('div', { class: 'chat-empty' },
+    el('span', { html: iconSvg('ai') }),
+    el('div', {},
+      el('div', { class: 'ai-empty-fa', text: 'دستیار هوش مصنوعی تیم داده‌سازان' }),
+      el('div', { text: 'هر سؤالی داری بپرس: برنامه‌نویسی، داده، امنیت آموزشی و بیشتر' })
+    ),
+    el('div', { class: 'ai-suggest' },
+      AI_EMPTY_SUGGESTS.map((s) => el('button', { type: 'button', text: s, onclick: () => {
+        const t = $('#ai-input');
+        if (t){ t.value = s; t.dispatchEvent(new Event('input', { bubbles: true })); t.focus(); }
+      } }))
+    )
+  );
+}
+
+function aiMessageNode(m, extraClass){
+  const mine = (m.role === 'user');
+  const bubble = el('div', { class: 'm-bubble' });
+  // رندر امن: فقط متن + لینک امن — پاسخ هوش مصنوعی هرگز HTML تفسیر نمی‌شود
+  safeTextWithLinks(String(m.content ?? ''), bubble);
+  const time = m.created_at ? fmtDate(m.created_at) : '';
+  return el('div', { class: 'ai-msg ' + (mine ? 'user' : 'bot') + (extraClass ? ' ' + extraClass : '') },
+    el('span', { class: 'ai-av', html: iconSvg(mine ? 'user' : 'ai') }),
+    el('div', { class: 'm-body' }, bubble, time ? el('span', { class: 'm-time', text: time }) : '')
+  );
+}
+
+function renderAIQuotaUI(){
+  const bar = $('#ai-quota-bar');
+  const pill = $('#ai-quota-pill');
+  if (!bar || !pill) return;
+  const q = state.ai;
+  pill.replaceChildren(el('i', { class: 'dot pulse' }));
+  if (!q || !q.loaded){
+    pill.append(el('span', { text: '...' }));
+    bar.replaceChildren(el('b', { text: 'سهمیه امروز' }), el('span', { class: 'muted', text: 'در حال دریافت سهمیه...' }));
+    return;
+  }
+  if (q.unavailable){
+    // مایگریشن/تابع هنوز نصب نیست — حالت دوستانه بدون خطای فنی
+    pill.append(el('span', { text: 'غیرفعال' }));
+    bar.replaceChildren(el('b', { text: 'سهمیه امروز' }), el('span', { class: 'muted', text: 'هوش مصنوعی به‌زودی فعال می‌شود؛ لطفاً چند دقیقه بعد دوباره سر بزنید.' }));
+    return;
+  }
+  if (q.enabled === false){
+    pill.append(el('span', { text: 'دسترسی ندارید' }));
+    bar.replaceChildren(el('b', { text: 'سهمیه امروز' }), el('span', { class: 'muted', text: 'دسترسی هوش مصنوعی برای این حساب فعال نیست.' }));
+    return;
+  }
+  if (q.unlimited){
+    pill.append(el('span', { text: 'نامحدود — مدیر' }));
+    bar.replaceChildren(el('b', { text: 'سهمیه امروز' }), el('span', { class: 'muted', text: 'استفاده نامحدود (مدیر — سهمیه محاسبه نمی‌شود)' }));
+    return;
+  }
+  const used = Math.max(0, Number(q.used ?? 0));
+  const limit = Math.max(1, Number(q.limit ?? 30));
+  const remaining = Math.max(0, limit - used);
+  pill.append(el('span', { text: toFa(used) + ' / ' + toFa(limit) }));
+  const fill = el('i');
+  fill.style.width = Math.min(100, Math.round((used / limit) * 100)) + '%';
+  bar.replaceChildren(
+    el('b', { text: 'سهمیه امروز' }),
+    el('b', { text: toFa(used) + ' / ' + toFa(limit) }),
+    el('span', { class: 'ai-qbar' }, fill),
+    el('span', { text: remaining > 0 ? (toFa(remaining) + ' پیام باقی مانده') : 'سهمیه شما تمام شده است.' }),
+    q.resets_at ? el('span', { class: 'ai-qreset', text: 'تمدید سهمیه: ' + aiFmtCountdown(new Date(q.resets_at).getTime() - aiServerNow()) }) : ''
+  );
+}
+
+function updateAIComposerState(){
+  const ta = $('#ai-input');
+  const btn = document.querySelector('#ai-form .send-btn');
+  const banner = $('#ai-banner');
+  if (!ta || !btn || !banner || !state.ai) return;
+  const q = state.ai;
+  const blocked = q.enabled === false || q.unavailable === true;
+  const exhausted = !q.unlimited && !q.unavailable && q.loaded && Number(q.remaining ?? 1) <= 0;
+  ta.disabled = blocked || exhausted || aiBusy;
+  btn.disabled = blocked || exhausted || aiBusy;
+  ta.placeholder = blocked
+    ? (q.unavailable ? 'هوش مصنوعی به‌زودی فعال می‌شود...' : 'دسترسی هوش مصنوعی برای این حساب فعال نیست.')
+    : exhausted
+      ? 'سهمیه امروز شما تمام شده است.'
+      : 'از دستیار هوش مصنوعی بپرس...';
+  if (blocked){
+    banner.textContent = q.unavailable ? 'هوش مصنوعی به‌زودی فعال می‌شود؛ لطفاً چند دقیقه بعد دوباره سر بزنید.' : 'دسترسی هوش مصنوعی برای این حساب فعال نیست.';
+    banner.hidden = false;
+  } else if (exhausted){
+    banner.textContent = 'سهمیه روزانه هوش مصنوعی شما تمام شده است؛ پس از تمدید خودکار سهمیه می‌توانید دوباره پیام بفرستید.';
+    banner.hidden = false;
+  } else {
+    banner.hidden = true;
+  }
+}
+
+async function refreshAIQuota(opts = {}){
+  if (aiQuotaBusy) return;
+  aiQuotaBusy = true;
+  try{
+    const { data, error } = await state.client.rpc('get_my_ai_quota');
+    if (error || !data){
+      if (!opts.silent) toast(mapError(error || { message: 'پاسخ نامعتبر بود' }), 'error');
+      // تابع/جدول هوش مصنوعی هنوز نصب نیست (مایگریشن اجرا نشده) → حالت دوستانه، بدون خطای فنی
+      state.ai = { ...(state.ai || {}), loaded: true, unavailable: true };
+      renderAIQuotaUI();
+      updateAIComposerState();
+      return;
+    }
+    const q = typeof data === 'string' ? JSON.parse(data) : data;
+    if (!q || q.auth === false){ state.ai = null; return; }
+    // همگام‌سازی ساعت سرور برای شمارش معکوس دقیق (زمان مرجع = سرور)
+    if (q.now) aiServerSkew = new Date(q.now).getTime() - Date.now();
+    state.ai = { ...state.ai, ...q, loaded: true };
+    renderAIQuotaUI();
+    updateAIComposerState();
+  }catch(e){
+    if (!opts.silent) toast(mapError(e), 'error');
+  }finally{
+    aiQuotaBusy = false;
+  }
+}
+
+async function loadAIHistory(box){
+  box.replaceChildren(el('div', { class: 'skel-row', style: 'margin:auto;width:70%' },
+    el('div', { class: 'skeleton', style: 'height:40px' }),
+    el('div', { class: 'skeleton', style: 'height:40px' })
+  ));
+  let data = null;
+  try{
+    const res = await state.client
+      .from('ai_messages').select('id, role, content, created_at')
+      .order('created_at', { ascending: false }).limit(40);
+    if (res.error) throw res.error;
+    data = res.data;
+  }catch{
+    // جدول هنوز نصب نیست → بی‌سروصدا حالت خالی (قابلیت پس از مایگریشن فعال می‌شود)
+    box.replaceChildren(aiEmptyNode());
+    return;
+  }
+  box.replaceChildren();
+  (data || []).reverse().forEach((m) => box.append(aiMessageNode(m)));
+  if (!(data || []).length) box.append(aiEmptyNode());
+  box.scrollTop = box.scrollHeight;
+}
+
+function handleAISendError(code, serverMsg, listBox){
+  const msg = serverMsg || AI_ERROR_FA[code] || AI_ERROR_FA.server;
+  listBox.append(el('div', { class: 'ai-msg bot error' },
+    el('span', { class: 'ai-av', html: iconSvg('ai') }),
+    el('div', { class: 'm-body' }, el('div', { class: 'm-bubble', text: msg }))
+  ));
+  if (code === 'quota' || code === 'blocked') refreshAIQuota({ silent: true });
+}
+
+async function sendAIMessage(ui){
+  const { ta, sendBtn, listBox } = ui;
+  if (aiBusy) return; // گارد ضد ارسال تکراری — دکمه هم غیرفعال است
+  if (!state.session || !state.profile){ toast(AI_ERROR_FA.auth, 'error'); return; }
+  if (!isMember()){ toast('هوش مصنوعی فقط برای اعضای تأییدشده فعال است.', 'warn'); return; }
+  const text = ta.value.trim();
+  if (!text) return;
+  if (text.length > AI_MAX_LEN){ toast(AI_ERROR_FA.prompt_too_long, 'warn'); return; }
+  if (state.ai && state.ai.enabled === false){ toast(AI_ERROR_FA.blocked, 'warn'); return; }
+
+  aiBusy = true;
+  ta.disabled = true;
+  sendBtn.disabled = true;
+
+  const empty = listBox.querySelector('.chat-empty');
+  if (empty) empty.remove();
+  // رندر خوش‌بینانه پیام کاربر + نشانگر تایپ
+  listBox.append(aiMessageNode({ role: 'user', content: text, created_at: new Date().toISOString() }));
+  const typing = el('div', { class: 'ai-msg bot' },
+    el('span', { class: 'ai-av', html: iconSvg('ai') }),
+    el('div', { class: 'm-body' },
+      el('div', { class: 'm-bubble' }, el('span', { class: 'ai-typing' }, el('i'), el('i'), el('i')))
+    )
+  );
+  listBox.append(typing);
+  listBox.scrollTop = listBox.scrollHeight;
+  ta.value = '';
+  ta.style.height = 'auto';
+  const c = document.querySelector('#ai-form .char-count');
+  if (c) c.textContent = '0/' + AI_MAX_LEN;
+
+  try{
+    const { data, error } = await state.client.functions.invoke('ai-chat', { body: { prompt: text } });
+    typing.remove();
+    if (error){
+      // استخراج پیام فارسی از بدنه پاسخ تابع — نسخه‌های مختلف supabase-js ساختار متفاوتی دارند
+      let code = 'server', msg = '';
+      try{
+        let j = null;
+        if (error?.context && typeof error.context.json === 'function') j = await error.context.json();
+        else if (error?.data && typeof error.data === 'object') j = error.data;
+        else if (error?.context && typeof error.context === 'object' && (error.context.error || error.context.message)) j = error.context;
+        code = String(j?.error || 'server');
+        msg = String(j?.message || '');
+      }catch{}
+      handleAISendError(code, msg, listBox);
+      if (code === 'prompt_invalid' || code === 'prompt_too_long'){
+        ta.value = text; // متن کاربر برگردد تا اصلاح کند
+      }
+    } else {
+      const reply = String(data?.reply ?? '');
+      if (reply) listBox.append(aiMessageNode({ role: 'assistant', content: reply, created_at: new Date().toISOString() }));
+      if (data?.quota){
+        state.ai = { ...(state.ai || {}), ...data.quota, loaded: true };
+        renderAIQuotaUI();
+      }
+    }
+  }catch{
+    typing.remove();
+    handleAISendError('network', '', listBox);
+  }finally{
+    aiBusy = false;
+    updateAIComposerState();
+    listBox.scrollTop = listBox.scrollHeight;
+    const t = $('#ai-input');
+    if (t && state.ai && state.ai.enabled !== false){ try{ t.focus(); }catch{} }
+  }
+}
+
+function confirmClearAI(box){
+  openModal({
+    title: 'پاک کردن گفتگو', iconName: 'trash', danger: true,
+    body: el('p', { text: 'کل تاریخچه گفت‌وگوی شما با هوش مصنوعی حذف می‌شود. این کار فقط گفت‌وگوی خودتان را پاک می‌کند و بازگشتی نیست. مطمئنید؟' }),
+    actions: [
+      { label: 'انصراف' },
+      { label: 'پاک کردن', class: 'btn-danger', onClick: async () => {
+        const { error } = await state.client.from('ai_messages').delete().neq('id', 0);
+        if (error){ toast(mapError(error), 'error'); return false; }
+        box.replaceChildren(aiEmptyNode());
+        toast('گفت‌وگو پاک شد.', 'info');
+      } },
+    ],
+  });
+}
+
+/* ============================================================================
    نمای مدیریت سایت — فقط مدیر (کنترل واقعی در RLS و توابع دیتابیس)
    ============================================================================ */
 let adminBody = null;
@@ -4534,6 +4967,34 @@ async function loadSiteSettingsUI(){
     finally{ saveChat.disabled = false; }
   });
 
+  /* — هوش مصنوعی — */
+  const aiLimitIn = el('input', { class: 'input ltr', type: 'number', step: '1', min: '1', max: '500', value: String(Number(s.ai_daily_limit) || 30), 'aria-label': 'سهمیه روزانه هر کاربر' });
+  const aiAdminChk = el('input', { type: 'checkbox' }); aiAdminChk.checked = !!s.ai_admin_counts;
+  const aiStatus = el('span', { class: 'cnt' });
+  const updateAIStatus = () => {
+    aiStatus.textContent = 'فعال: سهمیه ' + toFa(Number(aiLimitIn.value) || 30) + ' پیام در روز — مدیر: ' + (aiAdminChk.checked ? 'داخل سهمیه' : 'نامحدود');
+  };
+  aiLimitIn.addEventListener('input', updateAIStatus);
+  aiAdminChk.addEventListener('change', updateAIStatus);
+  updateAIStatus();
+  const saveAI = el('button', { class: 'btn btn-sm btn-primary', type: 'button', text: 'ذخیره تنظیمات هوش مصنوعی' });
+  saveAI.addEventListener('click', async () => {
+    const lim = Number(aiLimitIn.value);
+    if (!Number.isFinite(lim) || lim < 1 || lim > 500){ toast('سهمیه روزانه هوش مصنوعی باید بین ۱ تا ۵۰۰ پیام باشد.', 'warn'); return; }
+    saveAI.disabled = true;
+    try{
+      const r1 = await state.client.rpc('admin_set_setting', { p_key: 'ai_daily_limit', p_value: lim });
+      const r2 = await state.client.rpc('admin_set_setting', { p_key: 'ai_admin_counts', p_value: !!aiAdminChk.checked });
+      const err = r1.error || r2.error;
+      if (err){ toast(mapError(err), 'error'); return; }
+      state.settings.ai_daily_limit = lim;
+      state.settings.ai_admin_counts = !!aiAdminChk.checked;
+      toast('تنظیمات هوش مصنوعی ذخیره شد — سهمیه ' + toFa(lim) + ' پیام در روز.', 'info');
+      updateAIStatus();
+    }catch(e){ toast(mapError(e), 'error'); }
+    finally{ saveAI.disabled = false; }
+  });
+
   /* — ثبت‌نام — */
   const regChk = el('input', { type: 'checkbox' }); regChk.checked = !!s.reg_enabled;
   const saveReg = el('button', { class: 'btn btn-sm btn-primary', type: 'button', text: 'ذخیره' });
@@ -4588,6 +5049,18 @@ async function loadSiteSettingsUI(){
         el('label', { class: 'check-row', style: 'gap:8px' }, enChk, el('span', { text: 'باز' }))
       ),
       el('div', { class: 'setting-row' }, saveChat)
+    ),
+    el('div', { class: 'admin-sub' },
+      el('div', { class: 'admin-sub-head' }, el('b', {}, el('span', { html: iconSvg('ai') }), 'هوش مصنوعی'), aiStatus),
+      el('div', { class: 'setting-row' },
+        el('span', { class: 's-label', text: 'سهمیه روزانه هر کاربر (پیام)' }, el('small', { text: 'سقف پیام‌های هر عضو در پنجره ۲۴ ساعته — پیش‌فرض ۳۰؛ اجرا سمت سرور است' })),
+        aiLimitIn
+      ),
+      el('div', { class: 'setting-row' },
+        el('span', { class: 's-label', text: 'سهمیه برای مدیر هم محاسبه شود؟' }, el('small', { text: 'اگر خاموش باشد، استفاده مدیر نامحدود و بدون مصرف سهمیه است' })),
+        el('label', { class: 'check-row', style: 'gap:8px' }, aiAdminChk, el('span', { text: 'محاسبه شود' }))
+      ),
+      el('div', { class: 'setting-row' }, saveAI)
     ),
     el('div', { class: 'admin-sub' },
       el('div', { class: 'admin-sub-head' }, el('b', {}, el('span', { html: iconSvg('shield') }), 'ثبت‌نام'), el('span', { class: 'cnt', text: 'کنترل ورود اعضای جدید' })),
@@ -4916,6 +5389,15 @@ function memberDetailModal(u){
     }
   })();
 
+  /* — دسترسی هوش مصنوعی این کاربر (کنترل سمت سرور) — */
+  body.append(el('div', { class: 'admin-sub-head', style: 'margin-top:16px' },
+    el('b', {}, el('span', { html: iconSvg('ai') }), 'دسترسی هوش مصنوعی'),
+    el('span', { class: 'cnt', text: 'سهمیه ۲۴ ساعته — بررسی و اجرا سمت دیتابیس' })
+  ));
+  const aiBox = el('div', { class: 'ai-admin-block' });
+  body.append(aiBox);
+  renderMemberAIBlock(aiBox, u);
+
   const actions = [{ label: 'بستن' }];
   if (u.role !== 'admin'){
     if (!u.is_banned){
@@ -4938,6 +5420,90 @@ function memberDetailModal(u){
     }
   }
   openModal({ title: 'پروفایل عضو', iconName: 'user', body, actions });
+}
+
+/* بلوک مدیریت دسترسی/سهمیه هوش مصنوعی یک عضو — خواندن از ai_user_limits با RLS مدیر */
+function renderMemberAIBlock(box, u){
+  box.replaceChildren(el('p', { class: 'muted', text: 'در حال بارگذاری وضعیت هوش مصنوعی...' }));
+  (async () => {
+    let row = null, loadErr = null;
+    try{
+      const { data, error } = await state.client.from('ai_user_limits').select('*').eq('user_id', u.id).maybeSingle();
+      if (error) throw error;
+      row = data;
+    }catch(e){ loadErr = e; }
+    if (loadErr){
+      box.replaceChildren(el('p', { class: 'muted', text: 'وضعیت هوش مصنوعی بارگذاری نشد (احتمالاً مایگریشن migration_ai.sql هنوز اجرا نشده است).' }));
+      return;
+    }
+    const unlimitedAdmin = (u.role === 'admin') && !state.settings.ai_admin_counts;
+    const enabled = row ? !!row.ai_enabled : true;
+    const used = row ? Math.max(0, Number(row.used_count) || 0) : 0;
+    const limit = Math.max(1, Number(state.settings.ai_daily_limit) || 30);
+    const remaining = Math.max(0, limit - used);
+    const exhausted = !!row && remaining <= 0;
+    const resets = row && row.window_started_at
+      ? new Date(new Date(row.window_started_at).getTime() + 24 * 3600 * 1000)
+      : null;
+
+    const st = unlimitedAdmin
+      ? el('span', { class: 'v', text: 'نامحدود برای مدیر' })
+      : !enabled
+        ? el('span', { class: 'v', style: 'color:var(--red-2)', text: 'محروم' })
+        : exhausted
+          ? el('span', { class: 'v', style: 'color:var(--amber)', text: 'سهمیه تمام شده' })
+          : el('span', { class: 'v', text: 'فعال — ' + toFa(remaining) + ' پیام باقی مانده' });
+
+    const info = el('div', { class: 'detail-list' },
+      el('div', { class: 'di' }, el('span', { class: 'k', text: 'وضعیت دسترسی' }), st),
+      el('div', { class: 'di' }, el('span', { class: 'k', text: 'مصرف سهمیه' }), el('span', { class: 'v ltr', text: toFa(used) + ' / ' + toFa(limit) })),
+      el('div', { class: 'di' }, el('span', { class: 'k', text: 'باقی‌مانده' }), el('span', { class: 'v ltr', text: unlimitedAdmin ? 'نامحدود' : toFa(remaining) })),
+      el('div', { class: 'di' }, el('span', { class: 'k', text: 'شروع پنجره' }), el('span', { class: 'v', text: row && row.window_started_at ? fmtDate(row.window_started_at) : 'با اولین پیام' })),
+      el('div', { class: 'di' }, el('span', { class: 'k', text: 'تمدید' }), el('span', { class: 'v', text: resets ? fmtDate(resets) : 'با اولین پیام' }))
+    );
+    const btnRow = el('div', { class: 'row', style: 'margin-top:8px' });
+    if (enabled){
+      btnRow.append(el('button', { class: 'btn btn-sm btn-ghost-danger', type: 'button', text: 'محروم کردن از هوش مصنوعی', onclick: () => {
+        openModal({
+          title: 'محروم کردن از هوش مصنوعی', iconName: 'ban', danger: true,
+          body: el('p', { text: '«' + u.username + '» تا فعال‌سازی مجدد نمی‌تواند از دستیار هوش مصنوعی استفاده کند. بررسی سمت سرور انجام می‌شود. مطمئنید؟' }),
+          actions: [
+            { label: 'انصراف' },
+            { label: 'محروم کردن', class: 'btn-danger', onClick: async () => {
+              const { error } = await state.client.rpc('admin_set_ai_access', { p_user_id: u.id, p_enabled: false });
+              if (error){ toast(mapError(error), 'error'); return false; }
+              toast('دسترسی هوش مصنوعی «' + u.username + '» محروم شد.', 'info');
+              renderMemberAIBlock(box, u);
+            } },
+          ],
+        });
+      } }));
+    } else {
+      btnRow.append(el('button', { class: 'btn btn-sm btn-primary', type: 'button', text: 'فعال کردن هوش مصنوعی', onclick: async (e) => {
+        e.currentTarget.disabled = true;
+        const { error } = await state.client.rpc('admin_set_ai_access', { p_user_id: u.id, p_enabled: true });
+        if (error){ toast(mapError(error), 'error'); e.currentTarget.disabled = false; return; }
+        toast('دسترسی هوش مصنوعی «' + u.username + '» فعال شد.', 'info');
+        renderMemberAIBlock(box, u);
+      } }));
+    }
+    btnRow.append(el('button', { class: 'btn btn-sm btn-ghost', type: 'button', text: 'ریست سهمیه', onclick: () => {
+      openModal({
+        title: 'ریست سهمیه هوش مصنوعی', iconName: 'refresh',
+        body: el('p', { text: 'مصرف فعلی «' + u.username + '» صفر و پنجره ۲۴ ساعته از همین لحظه تازه شروع می‌شود. مطمئنید؟' }),
+        actions: [
+          { label: 'انصراف' },
+          { label: 'ریست سهمیه', class: 'btn-primary', onClick: async () => {
+            const { error } = await state.client.rpc('admin_reset_ai_quota', { p_user_id: u.id });
+            if (error){ toast(mapError(error), 'error'); return false; }
+            toast('سهمیه «' + u.username + '» ریست شد.', 'info');
+            renderMemberAIBlock(box, u);
+          } },
+        ],
+      });
+    } }));
+    box.replaceChildren(info, btnRow);
+  })();
 }
 function banMemberModal(u){
   const reason = el('textarea', { class: 'input', rows: '3', maxlength: '500', placeholder: 'دلیل (اختیاری — برای کاربر نمایش داده می‌شود)', 'aria-label': 'دلیل حذف از تیم' });
